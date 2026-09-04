@@ -1,0 +1,28 @@
+.quiz-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.quiz-card-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.quiz-card-points-wrap { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; margin-left: 8px; }
+.quiz-pts-input { width: 68px; text-align: center; padding: 2px 6px; }
+.quiz-cloze-helper-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; }
+.quiz-cloze-hint { color: var(--color-text-secondary); font-style: italic; }
+.quiz-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.quiz-toolbar-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.quiz-variant-bar { margin: 10px 0; }
+.quiz-variant-tabs { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.quiz-question-card { margin-bottom: 12px; }
+.quiz-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.quiz-card-title-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.quiz-prompt-input { width: 100%; box-sizing: border-box; resize: vertical; margin-bottom: 8px; }
+.quiz-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.quiz-option-row { display: flex; align-items: center; gap: 8px; }
+.quiz-opt-letter { min-width: 24px; text-align: center; }
+.quiz-weights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.quiz-weight-row { margin-bottom: 0; }
+.quiz-weight-check-group { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.85rem; }
+.quiz-max-score-box { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.quiz-max-score-input { width: 90px; }
+.quiz-auto-points-label { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; font-weight: 500; cursor: pointer; }
+
+@media (max-width: 768px) {
+  .quiz-meta-grid, .quiz-options-grid, .quiz-weights-grid { grid-template-columns: 1fr; }
+  .quiz-toolbar { flex-direction: column; align-items: stretch; }
+}

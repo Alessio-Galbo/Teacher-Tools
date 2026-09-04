@@ -1,12 +1,14 @@
 import { getAll, putItem, clearStore } from "./db.js";
 import { createSnapshot } from "./snapshot.js";
 
-const STORES = ["students", "notes", "pei_drafts", "snapshots", "classes", "school_settings", "schools"];
+const STORES = ["students", "notes", "pei_drafts", "snapshots", "classes", "school_settings", "schools", "pei_phrases", "assessments", "quizzes", "didactic_plans", "calendar_events"];
 
 export async function dumpDatabase() {
-  const [students, notes, pei_drafts, snapshots, classes, school_settings, schools] = await Promise.all(STORES.map((s) => getAll(s)));
-  return { version: 3, exportedAt: new Date().toISOString(), students, notes, pei_drafts, snapshots, classes, school_settings, schools };
+  const dump = { version: 6, exportedAt: new Date().toISOString() };
+  await Promise.all(STORES.map(async (s) => { dump[s] = await getAll(s); }));
+  return dump;
 }
+
 
 export async function exportAllDataJSON() {
   const data = await dumpDatabase();
@@ -23,13 +25,34 @@ export async function exportAllDataJSON() {
 export async function shareToICloud() {
   const data = await dumpDatabase();
   const filename = `TeacherTools_Backup_${new Date().toISOString().slice(0, 10)}.json`;
-  const file = new File([JSON.stringify(data, null, 2)], filename, { type: "application/json" });
+  const jsonStr = JSON.stringify(data, null, 2);
 
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    await navigator.share({ files: [file], title: "Teacher Tools Backup" });
-  } else {
-    await exportAllDataJSON();
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [{ description: "JSON Backup", accept: { "application/json": [".json"] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(jsonStr);
+      await writable.close();
+      return;
+    } catch (err) {
+      if (err.name === "AbortError") return;
+    }
   }
+
+  const file = new File([jsonStr], filename, { type: "application/json" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: "Teacher Tools Backup" });
+      return;
+    } catch (err) {
+      if (err.name === "AbortError") return;
+    }
+  }
+
+  await exportAllDataJSON();
 }
 
 export async function importDataJSON(jsonFile) {

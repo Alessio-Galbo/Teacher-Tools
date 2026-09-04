@@ -1,17 +1,19 @@
 import { createEl, clearEl } from "../../utils/dom.js";
 import { getNotes } from "./notesModel.js";
-import { createNoteItem } from "./noteItem.js";
 import { showNoteModal } from "./noteModal.js";
 import { getActiveStudentId, getStudents } from "../../services/studentService.js";
-import { getClasses, getSchools } from "../../services/schoolService.js";
+import { getClasses, getSchools, getSchoolConfig } from "../../services/schoolService.js";
 import { createSearchBar } from "./notesSearchBar.js";
 import { createDebouncedRenderer } from "../../utils/renderHelper.js";
 import { createTagFilterBar } from "./notesTagFilter.js";
+import { createYearFilterBar } from "./notesYearFilter.js";
 import { resolveTargetScope } from "./notesHierarchy.js";
 import { groupNotesByScope } from "./notesGrouper.js";
+import { renderNotesGroups } from "./notesGroupRenderer.js";
 
 let searchKeyword = "";
 let selectedTag = null;
+let yearMode = "current";
 let refreshListFn = null;
 
 export function renderNotesView(container) {
@@ -26,23 +28,35 @@ export function renderNotesView(container) {
     onClick: () => showNoteModal({ onSaved: () => { if (refreshListFn) refreshListFn(); } }),
   });
 
-  const searchBar = createSearchBar((keyword) => {
-    searchKeyword = keyword.trim().toLowerCase();
+  const searchBar = createSearchBar((kw) => {
+    searchKeyword = kw.trim().toLowerCase();
     if (refreshListFn) refreshListFn();
   });
 
   const toolbar = createEl("div", { className: "notes-toolbar" }, [addNoteBtn, searchBar]);
-  const tagFilterWrapper = createEl("div", { className: "notes-tag-filter-wrapper" });
+  const filterRow = createEl("div", { className: "notes-filter-row" });
   const listContainer = createEl("div", { id: "notes-list" });
 
   async function buildNotes() {
+    const config = await getSchoolConfig();
+    const activeYear = config.activeYear;
     const activeId = getActiveStudentId();
-    const [schools, classes, students, allNotes] = await Promise.all([getSchools(), getClasses(), getStudents(), getNotes()]);
+    const [schools, classes, students, allNotes] = await Promise.all([
+      getSchools(),
+      getClasses(),
+      getStudents(),
+      getNotes(null, "", yearMode === "current" ? activeYear : null),
+    ]);
+
     const scope = resolveTargetScope(activeId, { schools, classes, students });
     const scopedNotes = allNotes.filter(scope.filter);
 
-    clearEl(tagFilterWrapper);
-    tagFilterWrapper.appendChild(createTagFilterBar(scopedNotes, selectedTag, (tag) => {
+    clearEl(filterRow);
+    filterRow.appendChild(createYearFilterBar(activeYear, yearMode, (mode) => {
+      yearMode = mode;
+      if (refreshListFn) refreshListFn();
+    }));
+    filterRow.appendChild(createTagFilterBar(scopedNotes, selectedTag, (tag) => {
       selectedTag = tag;
       if (refreshListFn) refreshListFn();
     }));
@@ -60,27 +74,11 @@ export function renderNotesView(container) {
 
     const groups = groupNotesByScope(filtered, scope, { schools, classes, students });
     const onRefresh = () => { if (refreshListFn) refreshListFn(); };
-
-    return groups.map((grp) =>
-      createEl("div", { className: "notes-group" }, [
-        createEl("div", { className: "notes-group-header" }, [
-          createEl("span", { className: "notes-group-icon" }, grp.icon),
-          createEl("h3", { className: "notes-group-title" }, grp.title),
-          createEl("span", { className: "badge notes-group-count" }, String(grp.notes.length)),
-        ]),
-        createEl("div", { className: "notes-group-list" },
-          grp.notes.map((n) => createNoteItem(n, onRefresh, (noteToEdit) => showNoteModal({ note: noteToEdit, onSaved: onRefresh })))
-        ),
-      ])
-    );
+    return renderNotesGroups(groups, onRefresh);
   }
 
   refreshListFn = createDebouncedRenderer(listContainer, buildNotes);
-
-  container.appendChild(header);
-  container.appendChild(toolbar);
-  container.appendChild(tagFilterWrapper);
-  container.appendChild(listContainer);
+  container.append(header, toolbar, filterRow, listContainer);
   refreshListFn();
 }
 

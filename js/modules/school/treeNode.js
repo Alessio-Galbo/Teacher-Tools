@@ -17,8 +17,23 @@ export function createTreeNode(options = {}) {
   const labelGroup = createEl("div", { className: "tree-label-group" }, [titleEl, badgesRow].filter(Boolean));
   const contentEl = createEl("div", { className: "tree-row-content" }, [toggleEl, labelGroup].filter(Boolean));
 
-  if (hasChildren) {
-    contentEl.onclick = () => {
+  if (hasChildren && toggleEl) {
+    toggleEl.onclick = (e) => {
+      e.stopPropagation();
+      expanded = !expanded;
+      toggleEl.textContent = expanded ? "▼" : "▶";
+      childrenEl.classList.toggle("collapsed", !expanded);
+    };
+  }
+
+  if (options.onTitleClick) {
+    labelGroup.classList.add("clickable");
+    labelGroup.onclick = (e) => {
+      e.stopPropagation();
+      options.onTitleClick(e);
+    };
+  } else if (hasChildren) {
+    labelGroup.onclick = () => {
       expanded = !expanded;
       toggleEl.textContent = expanded ? "▼" : "▶";
       childrenEl.classList.toggle("collapsed", !expanded);

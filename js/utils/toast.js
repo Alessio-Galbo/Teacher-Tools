@@ -1,4 +1,5 @@
 import { createEl } from "./dom.js";
+import { t } from "../i18n.js";
 
 let container = null;
 
@@ -10,7 +11,7 @@ export function showToast(message, type = "info", duration = 2500) {
 
   const toast = createEl("div", {
     className: `toast toast-${type}`,
-  }, message);
+  }, t(message));
 
   container.appendChild(toast);
 

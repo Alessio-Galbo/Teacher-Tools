@@ -4,6 +4,7 @@ import { getSchoolConfig, getActiveSchool, getClasses, addClass } from "../../se
 import { getStudents } from "../../services/studentService.js";
 import { createTreeNode } from "./treeNode.js";
 import { createClassTreeNode } from "./classTreeNode.js";
+import { showSchoolOverviewModal } from "./schoolOverviewModal.js";
 
 export function createSchoolTreeView(onRefresh) {
   const container = createEl("div", { className: "tree-container card" });
@@ -48,6 +49,7 @@ export function createSchoolTreeView(onRefresh) {
       badges: [createEl("span", { className: "badge badge-primary" }, config.activeYear)],
       children: classNodes,
       isCollapsible: false,
+      onTitleClick: () => showSchoolOverviewModal(school.id),
     });
 
     container.replaceChildren(rootNode, createEl("div", { className: "form-group" }, [addClassBtn]));

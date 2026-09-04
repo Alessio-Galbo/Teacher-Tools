@@ -43,13 +43,14 @@ export function getPromotionStatus(cls, classStudents, nextYearStudents, nextCla
   if (enrolledCount < total) {
     return {
       status: "partial", isPromoted: true, enrolledCount, total,
-      label: `⚠️ ↗ ${nm || "..."} (${yr}) • ${enrolledCount}/${total}`,
+      label: isTerm ? `⚠️ 🎓 Fine Ciclo • ${enrolledCount}/${total}` : `⚠️ ↗ ${nm || "..."} (${yr}) • ${enrolledCount}/${total}`,
       badgeClass: "badge-warning",
     };
   }
   return {
     status: "complete", isPromoted: true, enrolledCount, total,
-    label: `↗ ${nm || "..."} (${yr}) ✓`,
+    label: isTerm ? "🎓 Fine Ciclo ✓" : `↗ ${nm || "..."} (${yr}) ✓`,
     badgeClass: "badge-success",
   };
+
 }

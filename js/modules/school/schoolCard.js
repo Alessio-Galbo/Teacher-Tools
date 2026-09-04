@@ -1,6 +1,7 @@
 import { createEl } from "../../utils/dom.js";
 import { t } from "../../i18n.js";
 import { showSchoolModal } from "./schoolModal.js";
+import { showSchoolOverviewModal } from "./schoolOverviewModal.js";
 import { removeSchoolFromYear, addClass } from "../../services/schoolService.js";
 import { createClassTreeNode } from "./classTreeNode.js";
 
@@ -40,10 +41,17 @@ export function createSchoolCard(school, classes, students, config, onRefresh, a
     },
   }, "🗑");
 
+  const titleEl = createEl("h3", {
+    className: "card-title card-title-clickable",
+    title: school.name,
+    onClick: () => showSchoolOverviewModal(school.id, config.activeYear),
+  }, `🏫 ${school.name}${school.city ? ` (${school.city})` : ""}`);
+
   const header = createEl("div", { className: "card-header" }, [
-    createEl("h3", { className: "card-title" }, `🏫 ${school.name}${school.city ? ` (${school.city})` : ""}`),
+    titleEl,
     createEl("div", { className: "tree-actions" }, [addClassBtn, editBtn, deleteBtn]),
   ]);
+
 
   const bodyContent = classNodes.length > 0
     ? createEl("div", { className: "tree-children" }, classNodes)

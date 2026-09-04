@@ -76,3 +76,6 @@
   padding: 4px 0;
   font-size: 0.88rem;
 }
+.card-title-clickable { cursor: pointer; transition: color var(--transition-fast); }
+.card-title-clickable:hover { color: var(--color-primary); }
+

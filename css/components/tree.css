@@ -19,6 +19,7 @@
   font-size: 0.84rem; font-weight: 600; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; line-height: 1.25;
 }
+.tree-label-group.clickable:hover .card-title { color: var(--color-primary); text-decoration: underline; }
 .tree-badges-row {
   display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
 }
@@ -50,4 +51,9 @@
 }
 .btn-pin.pinned { opacity: 1; filter: drop-shadow(0 0 2px var(--color-primary)); }
 .tree-actions .btn .btn-label { margin-left: 4px; }
-@media (max-width: 560px) { .tree-actions .btn .btn-label { display: none; } }
+@media (max-width: 560px) {
+  .tree-actions .btn .btn-label { display: none; }
+  .tree-row { padding: 5px 8px; gap: 6px; }
+  .tree-actions { gap: 3px; }
+}
+

@@ -28,7 +28,7 @@ export async function updateNote(id, updates) {
   return merged;
 }
 
-export async function getNotes(filterTag = null, searchKeyword = "") {
+export async function getNotes(filterTag = null, searchKeyword = "", schoolYear = null) {
   const [notes, students] = await Promise.all([getAll("notes"), getAll("students")]);
   const kw = searchKeyword.toLowerCase().trim();
   const matched = kw ? students.find((s) => s.name.toLowerCase() === kw) : null;
@@ -51,6 +51,7 @@ export async function getNotes(filterTag = null, searchKeyword = "") {
       return n;
     })
     .filter((n) => {
+      if (schoolYear && schoolYear !== "all" && n.schoolYear !== schoolYear) return false;
       if (filterTag && !n.tags.includes(filterTag)) return false;
       if (!kw) return true;
       const code = (n.studentCode || "").toLowerCase();

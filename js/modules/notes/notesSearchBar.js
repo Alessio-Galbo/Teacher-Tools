@@ -36,7 +36,10 @@ export function createSearchBar(onSearchChange) {
       const summary = generateStructuredSummary({
         notes, activeId, schools, classes, students, keyword: searchKeyword, year: config.activeYear,
       });
-      showSummaryModal(summary);
+      const scopeLabel = scope.entity?.name || (scope.type === "all" ? "Tutti gli Studenti" : "Generale");
+      const matchedSchool = scope.type === "school" ? scope.entity : schools[0];
+      const schoolName = matchedSchool ? `${matchedSchool.name}${matchedSchool.city ? ` (${matchedSchool.city})` : ""}` : "";
+      showSummaryModal({ notes, summaryText: summary, scopeLabel, activeYear: config.activeYear, schoolName });
     },
   });
 

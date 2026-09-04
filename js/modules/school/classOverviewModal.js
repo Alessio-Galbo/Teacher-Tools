@@ -12,16 +12,18 @@ export async function showClassOverviewModal(classIdOrName, initialYear = null) 
 
   const config = await getSchoolConfig();
   const allClasses = await getAll("classes");
-  const cleanName = classIdOrName.replace(/^class_/, "").replace(/^Classe\s+/, "");
-  const matchingClasses = allClasses.filter((c) => c.name === cleanName || c.id === classIdOrName);
+  const foundClass = allClasses.find((c) => c.id === classIdOrName || c.name === classIdOrName);
+  const className = foundClass ? foundClass.name : classIdOrName.replace(/^(class_|cls_)/, "").replace(/^Classe\s+/, "");
+  const matchingClasses = allClasses.filter((c) => c.name === className || c.id === classIdOrName);
   const availableYears = [...new Set(matchingClasses.map((c) => c.schoolYear).filter(Boolean))];
   if (availableYears.length === 0 && config.activeYear) availableYears.push(config.activeYear);
 
   async function render(year) {
     clearEl(overlay);
-    const targetClass = allClasses.find((c) => c.schoolYear === year && (c.name === cleanName || c.id === classIdOrName));
+    const targetClass = allClasses.find((c) => c.schoolYear === year && (c.name === className || c.id === classIdOrName));
+    const displayName = targetClass ? targetClass.name : className;
     const yearStudents = await getStudents(year);
-    const rawClassStudents = yearStudents.filter((s) => (targetClass && s.classId === targetClass.id) || s.className === cleanName);
+    const rawClassStudents = yearStudents.filter((s) => (targetClass && s.classId === targetClass.id) || s.className === displayName);
 
     const seen = new Set();
     const classStudents = rawClassStudents.filter((s) => {
@@ -31,7 +33,7 @@ export async function showClassOverviewModal(classIdOrName, initialYear = null) 
       return true;
     });
 
-    const notes = (await getNotes(null, `Classe ${cleanName}`)).filter((n) => !n.schoolYear || n.schoolYear === year);
+    const notes = (await getNotes(null, `Classe ${displayName}`)).filter((n) => !n.schoolYear || n.schoolYear === year);
 
     const yearNav = availableYears.length > 1 ? createEl("div", { className: "overview-year-nav" },
       availableYears.map((yr) => createEl("button", {
@@ -41,9 +43,10 @@ export async function showClassOverviewModal(classIdOrName, initialYear = null) 
     ) : null;
 
     const header = createEl("div", { className: "modal-header" }, [
-      createEl("h3", { className: "modal-title" }, `🏢 Classe ${cleanName}`),
+      createEl("h3", { className: "modal-title" }, `🏢 Classe ${displayName}`),
       createEl("button", { className: "modal-close-btn", onClick: () => overlay.classList.remove("active") }, "✕"),
     ]);
+
 
     const body = createClassOverviewBody({
       yearNav,

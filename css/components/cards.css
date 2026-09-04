@@ -54,3 +54,11 @@
   color: #ffffff;
   border-color: var(--color-primary);
 }
+
+.card-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  margin-top: 10px;
+}
+

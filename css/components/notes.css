@@ -14,7 +14,9 @@
 .notes-toolbar .input-text {
   padding: 0 12px; font-size: 0.88rem; flex: 1; min-width: 0;
 }
-.notes-tag-filter-wrapper { margin-bottom: 14px; }
+.notes-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.notes-year-filter { margin-bottom: 0; }
+.notes-tag-filter-wrapper { margin-bottom: 0; }
 .notes-quick-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .quick-tag-chip {
   padding: 4px 10px; font-size: 0.78rem; font-weight: 500; border-radius: var(--radius-pill);
@@ -65,13 +67,11 @@
   transition: all var(--transition-fast); flex-shrink: 0;
 }
 .note-delete-btn:hover { background-color: var(--color-danger-border); }
-.overview-year-nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
-.overview-year-btn {
-  padding: 4px 10px; font-size: 0.78rem; font-weight: 500; border-radius: var(--radius-pill);
-  background: var(--color-surface); border: 1px solid var(--color-border);
-  color: var(--color-text-secondary); cursor: pointer; transition: all var(--transition-fast);
-}
-.overview-year-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
-.overview-year-btn.active {
-  background: var(--color-primary); color: #fff; border-color: var(--color-primary); font-weight: 600;
-}
+.notes-macro-group { margin-bottom: 24px; padding: 14px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.notes-macro-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--color-primary); }
+.notes-macro-icon { font-size: 1.2rem; }
+.notes-macro-title { font-size: 1.02rem; font-weight: 700; color: var(--color-primary); margin: 0; }
+.notes-macro-count { font-size: 0.74rem; background: var(--color-primary-light); color: var(--color-primary); }
+.notes-macro-subgroups { display: flex; flex-direction: column; gap: 14px; }
+.notes-subgroup { margin-bottom: 0; }
+.notes-subgroup-header { border-bottom: 1px dashed var(--color-border); }

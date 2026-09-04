@@ -2,7 +2,7 @@ import { t } from "../../i18n.js";
 import { peiDimensions } from "./peiData.js";
 import { assemblePeiText } from "./peiModel.js";
 
-export function buildFullDossierText(selections = {}, studentName = "") {
+export function buildFullDossierText(selections = {}, studentName = "", effectiveDims = {}) {
   const header = [
     "PIANO EDUCATIVO INDIVIDUALIZZATO (PEI) - SCUOLA SECONDARIA II GRADO",
     "Linee Guida Ministeriali D.I. 182/2020 e D.I. 153/2023",
@@ -13,7 +13,7 @@ export function buildFullDossierText(selections = {}, studentName = "") {
 
   const sections = peiDimensions.map((dim) => {
     const sel = selections[dim.id] || {};
-    const text = assemblePeiText(dim.id, sel.levelId, sel.goalId, sel.strategyId);
+    const text = assemblePeiText(dim.id, sel.levelId, sel.goalId, sel.strategyId, effectiveDims[dim.id]);
     return `${t(dim.nameKey).toUpperCase()}\n\n${text}\n`;
   });
 

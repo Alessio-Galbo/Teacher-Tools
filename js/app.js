@@ -5,7 +5,9 @@ import { initStudentBar } from "./components/studentBar.js";
 import { renderPeiView } from "./modules/pei/peiView.js";
 import { renderNotesView } from "./modules/notes/notesView.js";
 import { renderSchoolView } from "./modules/school/schoolView.js";
+import { renderToolsView } from "./modules/tools/toolsView.js";
 import { renderSettingsView } from "./modules/settings/settingsView.js";
+import { showSettingsModal } from "./modules/settings/settingsModal.js";
 
 let currentTab = "view-pei";
 
@@ -13,6 +15,7 @@ const views = {
   "view-pei": renderPeiView,
   "view-notes": renderNotesView,
   "view-students": renderSchoolView,
+  "view-tools": renderToolsView,
   "view-settings": renderSettingsView,
 };
 
@@ -46,6 +49,11 @@ async function bootstrap() {
     const btn = e.target.closest(".tab-btn");
     if (btn && btn.dataset.target) switchTab(btn.dataset.target);
   });
+
+  const settingsBtn = document.getElementById("header-settings-btn");
+  if (settingsBtn) {
+    settingsBtn.addEventListener("click", () => showSettingsModal());
+  }
 
   window.addEventListener("navigateToTab", (e) => {
     if (e.detail) switchTab(e.detail);

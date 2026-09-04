@@ -1,6 +1,7 @@
 const DB_NAME = "TeacherToolsDB";
-const DB_VERSION = 3;
-const STORES = ["students", "notes", "pei_drafts", "snapshots", "classes", "school_settings", "schools"];
+const DB_VERSION = 6;
+const STORES = ["students", "notes", "pei_drafts", "snapshots", "classes", "school_settings", "schools", "pei_phrases", "assessments", "quizzes", "didactic_plans", "calendar_events"];
+
 
 let dbInstance = null;
 
@@ -30,6 +31,16 @@ export async function getAll(storeName) {
     const tx = db.transaction(storeName, "readonly");
     const req = tx.objectStore(storeName).getAll();
     req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function getItem(storeName, id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(storeName, "readonly");
+    const req = tx.objectStore(storeName).get(id);
+    req.onsuccess = () => resolve(req.result || null);
     req.onerror = () => reject(req.error);
   });
 }

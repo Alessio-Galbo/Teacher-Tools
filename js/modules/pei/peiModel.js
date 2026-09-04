@@ -1,8 +1,8 @@
 import { putItem, getAll } from "../../services/db.js";
 import { getDimensionById } from "./peiData.js";
 
-export function assemblePeiText(dimId, levelId, goalId, strategyId) {
-  const dim = getDimensionById(dimId);
+export function assemblePeiText(dimId, levelId, goalId, strategyId, customDim = null) {
+  const dim = customDim || getDimensionById(dimId);
   const level = dim.levels.find((l) => l.id === levelId) || dim.levels[0];
   const goal = dim.goals.find((g) => g.id === goalId) || dim.goals[0];
   const strategy = dim.strategies.find((s) => s.id === strategyId) || dim.strategies[0];

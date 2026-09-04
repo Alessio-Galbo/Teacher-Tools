@@ -1,19 +1,33 @@
 import { createEl, clearEl } from "../../utils/dom.js";
 import { showToast } from "../../utils/toast.js";
 import { t } from "../../i18n.js";
-import { peiDimensions, getDimensionById } from "./peiData.js";
+import { peiDimensions } from "./peiData.js";
 import { assemblePeiText, savePeiDraft } from "./peiModel.js";
 import { createSelectGroup } from "./peiForm.js";
 import { showDossierModal } from "./dossierModal.js";
+import { getEffectiveDimension } from "./peiPhraseService.js";
+import { createPeiOutputBox } from "./peiOutputBox.js";
 
 let currentDimId = "dim1";
+let currentEffectiveDim = null;
 const dimSelections = {};
 
 export function renderPeiView(container) {
   clearEl(container);
-  const header = createEl("div", { className: "section-header" }, [
-    createEl("h2", { className: "section-title", i18n: "pei_title" }),
-    createEl("p", { className: "section-subtitle", i18n: "pei_subtitle" }),
+  const configBtn = createEl("button", {
+    className: "btn btn-secondary",
+    i18n: "pei_btn_config",
+    onClick: () => {
+      import("./peiConfigModal.js").then((m) => m.showPeiConfigModal(() => updateForm()));
+    },
+  });
+
+  const header = createEl("div", { className: "section-header section-header-row" }, [
+    createEl("div", {}, [
+      createEl("h2", { className: "section-title", i18n: "pei_title" }),
+      createEl("p", { className: "section-subtitle", i18n: "pei_subtitle" }),
+    ]),
+    configBtn,
   ]);
 
   const dimTabs = createEl("div", { className: "pei-dim-tabs" },
@@ -32,39 +46,29 @@ export function renderPeiView(container) {
   );
 
   const formBox = createEl("div", { className: "card", id: "pei-form-container" });
-  const outputBox = createEl("div", { className: "pei-output-box" }, [
-    createEl("h3", { className: "card-title", i18n: "pei_preview_title" }),
-    createEl("div", { className: "pei-output-text", id: "pei-output-text" }),
-    createEl("div", { className: "pei-actions" }, [
-      createEl("button", { className: "btn btn-primary btn-block", i18n: "pei_btn_copy", onClick: copyOutput }),
-    ]),
-  ]);
-
-  const dossierBtn = createEl("button", {
-    className: "btn btn-secondary btn-block",
-    i18n: "pei_btn_full",
-    onClick: () => showDossierModal(dimSelections),
+  const [outputBox, dossierGroup] = createPeiOutputBox({
+    onCopy: copyOutput,
+    onDossier: () => showDossierModal(dimSelections),
   });
 
-  container.appendChild(header);
-  container.appendChild(dimTabs);
-  container.appendChild(formBox);
-  container.appendChild(outputBox);
-  container.appendChild(createEl("div", { className: "form-group" }, [dossierBtn]));
+  container.append(header, dimTabs, formBox, outputBox, dossierGroup);
   updateForm();
 }
 
-function updateForm() {
+async function updateForm() {
   const container = document.getElementById("pei-form-container");
   if (!container) return;
   clearEl(container);
-  const dim = getDimensionById(currentDimId);
+  currentEffectiveDim = await getEffectiveDimension(currentDimId);
+  const dim = currentEffectiveDim;
   const sel = dimSelections[currentDimId] || { levelId: dim.levels[0].id, goalId: dim.goals[0].id, strategyId: dim.strategies[0].id };
   dimSelections[currentDimId] = sel;
 
-  container.appendChild(createSelectGroup("pei_level_select", dim.levels, sel.levelId, (v) => { sel.levelId = v; refreshOutput(); }));
-  container.appendChild(createSelectGroup("pei_goal_select", dim.goals, sel.goalId, (v) => { sel.goalId = v; refreshOutput(); }));
-  container.appendChild(createSelectGroup("pei_strategy_select", dim.strategies, sel.strategyId, (v) => { sel.strategyId = v; refreshOutput(); }));
+  container.append(
+    createSelectGroup("pei_level_select", dim.levels, sel.levelId, (v) => { sel.levelId = v; refreshOutput(); }),
+    createSelectGroup("pei_goal_select", dim.goals, sel.goalId, (v) => { sel.goalId = v; refreshOutput(); }),
+    createSelectGroup("pei_strategy_select", dim.strategies, sel.strategyId, (v) => { sel.strategyId = v; refreshOutput(); })
+  );
   refreshOutput();
 }
 
@@ -72,7 +76,7 @@ function refreshOutput() {
   const out = document.getElementById("pei-output-text");
   if (!out) return;
   const sel = dimSelections[currentDimId];
-  const text = assemblePeiText(currentDimId, sel.levelId, sel.goalId, sel.strategyId);
+  const text = assemblePeiText(currentDimId, sel.levelId, sel.goalId, sel.strategyId, currentEffectiveDim);
   out.textContent = text;
   savePeiDraft(currentDimId, sel.levelId, sel.goalId, sel.strategyId, text);
 }

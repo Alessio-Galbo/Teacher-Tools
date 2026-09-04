@@ -2,8 +2,10 @@ import { createEl, clearEl } from "../../utils/dom.js";
 import { getSchoolConfig, getSchools, getClasses } from "../../services/schoolService.js";
 import { getStudents } from "../../services/studentService.js";
 import { getNotes } from "../notes/notesModel.js";
+import { createSchoolOverviewBody } from "./schoolOverviewBody.js";
 
 export async function showSchoolOverviewModal(schoolId, initialYear = null) {
+
   const overlay = document.getElementById("modal-container");
   if (!overlay) return;
 
@@ -17,9 +19,25 @@ export async function showSchoolOverviewModal(schoolId, initialYear = null) {
 
   async function render(year) {
     clearEl(overlay);
-    const classes = (await getClasses(year)).filter((c) => !c.schoolId || c.schoolId === school.id);
-    const students = (await getStudents(year)).filter((s) => !s.schoolId || s.schoolId === school.id || classes.some((c) => c.id === s.classId));
+    const classes = (await getClasses(year)).filter((c) => c.schoolId === school.id || (!c.schoolId && allSchools.length === 1));
+    const schoolClassIds = new Set(classes.map((c) => c.id));
+    const schoolClassNames = new Set(classes.map((c) => (c.name || "").toLowerCase()));
+
+    const rawStudents = await getStudents(year);
+    const seen = new Set();
+    const students = rawStudents.filter((s) => {
+      const matches = (s.schoolId && s.schoolId === school.id) ||
+        (s.classId && schoolClassIds.has(s.classId)) ||
+        (s.className && schoolClassNames.has((s.className || "").toLowerCase()));
+      if (!matches) return false;
+      const k = s.personId || s.id;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+
     const notes = (await getNotes(null, school.name)).filter((n) => !n.schoolYear || n.schoolYear === year);
+
 
     const yearNav = availableYears.length > 1 ? createEl("div", { className: "overview-year-nav" },
       availableYears.map((yr) => createEl("button", {
@@ -28,44 +46,21 @@ export async function showSchoolOverviewModal(schoolId, initialYear = null) {
       }, `📅 ${yr}`))
     ) : null;
 
-    const classChips = classes.map((c) => {
-      const count = students.filter((s) => s.classId === c.id || s.className === c.name).length;
-      return createEl("span", {
-        className: "overview-peer-chip",
-        onClick: () => {
-          overlay.classList.remove("active");
-          import("./classOverviewModal.js").then((m) => m.showClassOverviewModal(c.name, year));
-        },
-      }, `🏢 ${c.name} (${count})`);
-    });
-
-    const pei = students.filter((s) => (s.supportType || "pei") === "pei").length;
-    const bes = students.filter((s) => s.supportType === "bes").length;
-    const curr = students.filter((s) => s.supportType === "curriculare").length;
-
-    const statsGrid = createEl("div", { className: "overview-grid" }, [
-      createEl("div", { className: "overview-info-item" }, [
-        createEl("span", { className: "form-label", i18n: "overview_total_classes" }),
-        createEl("span", { className: "badge" }, `${classes.length}`),
-      ]),
-      createEl("div", { className: "overview-info-item" }, [
-        createEl("span", { className: "form-label", i18n: "overview_total_students" }),
-        createEl("span", { className: "badge badge-primary" }, `${students.length} (${pei} PEI, ${bes} BES, ${curr} Curr)`),
-      ]),
-    ]);
-
     const header = createEl("div", { className: "modal-header" }, [
       createEl("h3", { className: "modal-title" }, `🏫 ${school.name}${school.city ? ` (${school.city})` : ""}`),
       createEl("button", { className: "modal-close-btn", onClick: () => overlay.classList.remove("active") }, "✕"),
     ]);
 
-    const body = createEl("div", { className: "modal-body" }, [
-      yearNav, statsGrid,
-      createEl("div", { className: "form-group" }, [
-        createEl("label", { className: "form-label", i18n: "overview_school_classes" }),
-        classChips.length > 0 ? createEl("div", { className: "tags-bar" }, classChips) : createEl("p", { className: "app-subtitle", i18n: "overview_no_classes" }),
-      ]),
-    ]);
+    const body = createSchoolOverviewBody({
+      yearNav,
+      classes,
+      students,
+      onClassClick: (c) => {
+        overlay.classList.remove("active");
+        import("./classOverviewModal.js").then((m) => m.showClassOverviewModal(c.name, year));
+      },
+    });
+
 
     const toolbar = createEl("div", { className: "modal-toolbar" }, [
       createEl("button", { className: "btn btn-secondary", i18n: "btn_close", onClick: () => overlay.classList.remove("active") }),

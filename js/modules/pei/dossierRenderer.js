@@ -2,7 +2,7 @@ import { createEl } from "../../utils/dom.js";
 import { t } from "../../i18n.js";
 import { peiDimensions, getDimensionById } from "./peiData.js";
 
-export function renderDossierDOM(selections = {}, studentName = "") {
+export function renderDossierDOM(selections = {}, studentName = "", effectiveDims = {}) {
   const container = createEl("div", { className: "dossier-paper" });
 
   const badges = [createEl("span", { className: "badge" }, `Data: ${new Date().toLocaleDateString()}`)];
@@ -19,7 +19,7 @@ export function renderDossierDOM(selections = {}, studentName = "") {
 
   peiDimensions.forEach((dim) => {
     const sel = selections[dim.id] || {};
-    const fullDim = getDimensionById(dim.id);
+    const fullDim = effectiveDims[dim.id] || getDimensionById(dim.id);
     const level = fullDim.levels.find((l) => l.id === sel.levelId) || fullDim.levels[0];
     const goal = fullDim.goals.find((g) => g.id === sel.goalId) || fullDim.goals[0];
     const strategy = fullDim.strategies.find((s) => s.id === sel.strategyId) || fullDim.strategies[0];

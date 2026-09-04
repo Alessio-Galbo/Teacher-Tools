@@ -15,6 +15,8 @@ export function createEl(tag, attrs = {}, children = []) {
     } else if (key === "i18nPlaceholder") {
       el.dataset.i18nPlaceholder = val;
       el.placeholder = t(val);
+    } else if (key === "value") {
+      el.value = val;
     } else if (key.startsWith("on") && typeof val === "function") {
       el.addEventListener(key.slice(2).toLowerCase(), val);
     } else if (val !== false && val !== null && val !== undefined) {

@@ -1,4 +1,5 @@
 import { t } from "../../i18n.js";
+import { groupAllSchoolsNotes } from "./notesSchoolGrouper.js";
 
 export function groupNotesByScope(notes, scope, { schools = [], classes = [], students = [] }) {
   if (!Array.isArray(notes) || notes.length === 0) return [];
@@ -58,28 +59,5 @@ export function groupNotesByScope(notes, scope, { schools = [], classes = [], st
     return groups;
   }
 
-  const groups = [];
-  const handled = new Set();
-
-  schools.forEach((sch) => {
-    const schClasses = classes.filter((c) => !c.schoolId || c.schoolId === sch.id);
-    const classNames = new Set(schClasses.map((c) => c.name.toLowerCase()));
-    const schStudents = students.filter((s) => s.schoolId === sch.id || classNames.has((s.className || "").toLowerCase()));
-    const studentNames = new Set(schStudents.map((s) => s.name.toLowerCase()));
-
-    const schNotes = notes.filter((n) => {
-      if (handled.has(n)) return false;
-      const code = (n.studentCode || "").toLowerCase();
-      return code === sch.name.toLowerCase() || classNames.has(code.replace(/^classe\s+/, "")) || studentNames.has(code);
-    });
-
-    schNotes.forEach((n) => handled.add(n));
-    if (schNotes.length > 0) {
-      groups.push({ icon: "🏫", title: `${sch.name}${sch.city ? ` (${sch.city})` : ""}`, notes: schNotes });
-    }
-  });
-
-  const remaining = notes.filter((n) => !handled.has(n));
-  if (remaining.length > 0) groups.push({ icon: "🎓", title: t("notes_group_student"), notes: remaining });
-  return groups;
+  return groupAllSchoolsNotes(notes, { schools, classes, students });
 }

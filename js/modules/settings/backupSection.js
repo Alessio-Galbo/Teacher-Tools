@@ -15,7 +15,7 @@ export function createBackupSection() {
         await importDataJSON(file);
         showToast(t("toast_import_ok"), "success");
       } catch (err) {
-        showToast("Errore importazione file", "error");
+        showToast(t("toast_import_err"), "error");
       }
     },
   });
@@ -44,8 +44,12 @@ export function createBackupSection() {
     onClick: () => fileInput.click(),
   });
 
+  const hintEl = createEl("p", { className: "card-hint", i18n: "settings_backup_icloud_hint" });
+
   return createEl("div", { className: "card" }, [
     createEl("h3", { className: "card-title", i18n: "settings_backup_title" }),
     createEl("div", { className: "pei-dim-tabs" }, [shareBtn, exportBtn, importBtn, fileInput]),
+    hintEl,
   ]);
 }
+

@@ -13,6 +13,15 @@ export async function showDossierModal(savedSelections) {
   const activeSt = await getActiveStudent();
   const studentName = activeSt ? `${activeSt.name}${activeSt.className ? " (" + activeSt.className + ")" : ""}` : "";
 
+  const { getEffectiveDimension } = await import("./peiPhraseService.js");
+  const [d1, d2, d3, d4] = await Promise.all([
+    getEffectiveDimension("dim1"),
+    getEffectiveDimension("dim2"),
+    getEffectiveDimension("dim3"),
+    getEffectiveDimension("dim4"),
+  ]);
+  const effectiveDims = { dim1: d1, dim2: d2, dim3: d3, dim4: d4 };
+
   const closeBtn = createEl("button", {
     className: "modal-close-btn",
     onClick: () => modalContainer.classList.remove("active"),
@@ -22,7 +31,7 @@ export async function showDossierModal(savedSelections) {
     className: "btn btn-primary",
     i18n: "pei_full_copy",
     onClick: () => {
-      const text = buildFullDossierText(savedSelections, studentName);
+      const text = buildFullDossierText(savedSelections, studentName, effectiveDims);
       navigator.clipboard.writeText(text).then(() => {
         showToast(t("pei_btn_copied"), "success");
       });
@@ -41,7 +50,7 @@ export async function showDossierModal(savedSelections) {
   ]);
 
   const toolbar = createEl("div", { className: "modal-toolbar" }, [copyBtn, printBtn]);
-  const body = createEl("div", { className: "modal-body" }, [renderDossierDOM(savedSelections, studentName)]);
+  const body = createEl("div", { className: "modal-body" }, [renderDossierDOM(savedSelections, studentName, effectiveDims)]);
 
   const dialog = createEl("div", { className: "modal-dialog" }, [header, toolbar, body]);
 
