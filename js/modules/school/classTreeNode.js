@@ -1,0 +1,56 @@
+import { createEl } from "../../utils/dom.js";
+import { t } from "../../i18n.js";
+import { removeClass } from "../../services/schoolService.js";
+import { createTreeNode } from "./treeNode.js";
+import { createStudentTreeNode } from "./studentTreeNode.js";
+import { showStudentModal } from "./studentModal.js";
+import { showRolloverModal } from "./rolloverModal.js";
+
+export function createClassTreeNode(cls, students, onRefresh) {
+  const classStudents = students.filter((s) => s.classId === cls.id || s.className === cls.name);
+  const studentNodes = classStudents.map((st) => createStudentTreeNode(st, onRefresh));
+
+  const promoteBtn = createEl("button", {
+    className: "btn btn-secondary btn-sm",
+    title: t("school_btn_promote"),
+    onClick: (e) => {
+      e.stopPropagation();
+      showRolloverModal(cls, onRefresh);
+    },
+  }, [
+    createEl("span", { className: "btn-icon" }, "↗️"),
+    createEl("span", { className: "btn-label", i18n: "school_btn_promote_short" }),
+  ]);
+
+  const addStBtn = createEl("button", {
+    className: "btn btn-secondary btn-sm",
+    title: t("student_modal_new"),
+    onClick: (e) => {
+      e.stopPropagation();
+      showStudentModal({ defaultClass: cls, onSaved: onRefresh });
+    },
+  }, [
+    createEl("span", { className: "btn-icon" }, "+"),
+    createEl("span", { className: "btn-label", i18n: "school_btn_add_student_short" }),
+  ]);
+
+  const delClsBtn = createEl("button", {
+    className: "note-delete-btn btn-sm btn-icon-only",
+    title: t("school_class_delete_confirm"),
+    onClick: async (e) => {
+      e.stopPropagation();
+      if (confirm(t("school_class_delete_confirm"))) {
+        await removeClass(cls.id);
+        if (onRefresh) onRefresh();
+      }
+    },
+  }, "🗑");
+
+  return createTreeNode({
+    icon: "🏢",
+    title: `Classe ${cls.name}`,
+    badges: [createEl("span", { className: "badge" }, `${classStudents.length} alunni`)],
+    actions: [promoteBtn, addStBtn, delClsBtn],
+    children: studentNodes,
+  });
+}

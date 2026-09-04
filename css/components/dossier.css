@@ -1,0 +1,81 @@
+.dossier-paper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dossier-header-box {
+  background-color: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.dossier-official-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.dossier-official-sub {
+  font-size: 0.76rem;
+  color: var(--color-text-secondary);
+}
+
+.dossier-dim-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.dossier-dim-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.dossier-field {
+  margin-bottom: 12px;
+}
+
+.dossier-field:last-child {
+  margin-bottom: 0;
+}
+
+.dossier-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.dossier-content {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--color-text-primary);
+}
+
+@media print {
+  @page { size: A4; margin: 15mm; }
+  body, html { background: #ffffff !important; color: #000000 !important; overflow: visible !important; height: auto !important; }
+  .app-shell, .tab-bar, .app-header, .toast-container, .modal-header, .modal-toolbar { display: none !important; }
+  .modal-overlay { position: static !important; background: transparent !important; padding: 0 !important; display: block !important; opacity: 1 !important; }
+  .modal-dialog { border: none !important; box-shadow: none !important; max-width: 100% !important; max-height: none !important; overflow: visible !important; background: transparent !important; }
+  .modal-body { padding: 0 !important; overflow: visible !important; }
+  .dossier-paper { color: #000000 !important; gap: 14px; }
+  .dossier-header-box { background: #f4f4f4 !important; border: 1px solid #333333 !important; color: #000000 !important; }
+  .dossier-official-title { color: #000000 !important; }
+  .dossier-official-sub { color: #555555 !important; }
+  .dossier-dim-card { background: #ffffff !important; border: 1px solid #999999 !important; page-break-inside: avoid; }
+  .dossier-dim-title { color: #000000 !important; border-bottom: 1px solid #cccccc !important; }
+  .dossier-label { color: #444444 !important; }
+  .dossier-content { color: #000000 !important; }
+}

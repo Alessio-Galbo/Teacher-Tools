@@ -1,0 +1,54 @@
+import { createEl } from "../../utils/dom.js";
+import { t } from "../../i18n.js";
+import { showSchoolModal } from "./schoolModal.js";
+import { removeSchoolFromYear, addClass } from "../../services/schoolService.js";
+import { createClassTreeNode } from "./classTreeNode.js";
+
+export function createSchoolCard(school, classes, students, config, onRefresh) {
+  const schClasses = classes.filter((c) => !c.schoolId || c.schoolId === school.id);
+  const classNodes = schClasses.map((cls) => createClassTreeNode(cls, students, onRefresh));
+
+  const editBtn = createEl("button", {
+    className: "btn btn-secondary btn-sm btn-icon-only",
+    title: t("school_modal_edit"),
+    onClick: () => showSchoolModal({ school, onSaved: onRefresh }),
+  }, "✏️");
+
+  const deleteBtn = createEl("button", {
+    className: "note-delete-btn btn-sm btn-icon-only",
+    title: t("school_remove_from_year_confirm"),
+    onClick: async () => {
+      if (confirm(t("school_remove_from_year_confirm"))) {
+        await removeSchoolFromYear(school.id, config.activeYear);
+        if (onRefresh) onRefresh();
+      }
+    },
+  }, "🗑");
+
+  const addClassBtn = createEl("button", {
+    className: "btn btn-secondary btn-block btn-sm",
+    i18n: "school_btn_add_class",
+    onClick: async () => {
+      const name = prompt(t("school_prompt_class_name"));
+      if (name && name.trim()) {
+        await addClass(name, config.activeYear, null, school.id);
+        if (onRefresh) onRefresh();
+      }
+    },
+  });
+
+  const header = createEl("div", { className: "card-header" }, [
+    createEl("h3", { className: "card-title" }, `🏫 ${school.name}${school.city ? ` (${school.city})` : ""}`),
+    createEl("div", { className: "tree-actions" }, [editBtn, deleteBtn]),
+  ]);
+
+  const bodyContent = classNodes.length > 0
+    ? createEl("div", { className: "tree-children" }, classNodes)
+    : createEl("p", { className: "text-muted", i18n: "school_classes_empty" });
+
+  return createEl("div", { className: "card school-card" }, [
+    header,
+    bodyContent,
+    createEl("div", { className: "form-group" }, [addClassBtn]),
+  ]);
+}

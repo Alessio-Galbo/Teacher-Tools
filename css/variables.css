@@ -1,0 +1,65 @@
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-hover: #21262d;
+  --color-surface-raised: #1f242c;
+  --color-border: #30363d;
+  --color-border-subtle: #21262d;
+  
+  --color-text-primary: #f0f6fc;
+  --color-text-secondary: #8b949e;
+  --color-text-muted: #6e7681;
+  
+  --color-primary: #2f81f7;
+  --color-primary-hover: #388bfd;
+  --color-primary-glow: rgba(47, 129, 247, 0.25);
+  
+  --color-accent-teal: #2ea043;
+  --color-accent-amber: #d29922;
+  --color-accent-purple: #a371f7;
+  --color-accent-red: #f85149;
+  --color-danger-subtle: rgba(248, 81, 73, 0.12);
+  --color-danger-border: rgba(248, 81, 73, 0.35);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, 0.45);
+  
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  
+  --tab-bar-height: 64px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] {
+  --color-bg: #f6f8fa;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f3f4f6;
+  --color-surface-raised: #ffffff;
+  --color-border: #d0d7de;
+  --color-border-subtle: #eaeef2;
+  --color-text-primary: #1f2328;
+  --color-text-secondary: #57606a;
+  --color-text-muted: #8c959f;
+  --color-primary: #0969da;
+  --color-primary-hover: #085cc1;
+  --color-primary-glow: rgba(9, 105, 218, 0.15);
+  --color-accent-red: #cf222e;
+  --color-danger-subtle: rgba(207, 34, 46, 0.08);
+  --color-danger-border: rgba(207, 34, 46, 0.28);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
