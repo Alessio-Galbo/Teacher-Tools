@@ -3,6 +3,7 @@ import { showToast } from "../../utils/toast.js";
 import { t } from "../../i18n.js";
 import { addNote } from "./notesModel.js";
 import { getActiveStudent, getActiveStudentId } from "../../services/studentService.js";
+import { getSchoolConfig } from "../../services/schoolService.js";
 
 const TAG_GROUPS = [
   { cat: "tags_cat_didactic", tags: ["notes_tag_obs", "notes_tag_chk", "notes_tag_task", "notes_tag_met", "notes_tag_att", "notes_tag_comp"] },
@@ -44,7 +45,13 @@ export function createNoteForm(onNoteAdded) {
       const isClass = activeId && activeId.startsWith("class_");
       const st = await getActiveStudent();
       const target = isClass ? activeId.replace("class_", "Classe ") : (st ? st.name : "Generale");
-      await addNote(target, contentInput.value, selectedTags, isClass);
+      const cfg = await getSchoolConfig();
+      const meta = {
+        schoolYear: cfg?.activeYear || "",
+        className: isClass ? activeId.replace("class_", "") : (st?.className || ""),
+        studentId: st?.id || null, personId: st?.personId || null,
+      };
+      await addNote(target, contentInput.value, selectedTags, isClass, meta);
       contentInput.value = "";
       showToast(t("toast_saved"), "success");
       if (onNoteAdded) onNoteAdded();

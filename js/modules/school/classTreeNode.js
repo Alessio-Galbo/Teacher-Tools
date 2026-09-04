@@ -5,18 +5,21 @@ import { createTreeNode } from "./treeNode.js";
 import { createStudentTreeNode } from "./studentTreeNode.js";
 import { showStudentModal } from "./studentModal.js";
 import { showRolloverModal } from "./rolloverModal.js";
+import { getPromotionStatus } from "./rolloverHelper.js";
 
-export function createClassTreeNode(cls, students, onRefresh, allClasses = []) {
+export function createClassTreeNode(cls, students, onRefresh, allClasses = [], nextYearStudents = [], school = null) {
   const classStudents = students.filter((s) => s.classId === cls.id || s.className === cls.name);
   const studentNodes = classStudents.map((st) => createStudentTreeNode(st, onRefresh));
   const nextClass = allClasses.find((c) => c.originClassId === cls.id || c.id === cls.promotedToClassId);
+  const promo = getPromotionStatus(cls, classStudents, nextYearStudents, nextClass, allClasses);
+  const isExistingValid = nextClass && allClasses.some((c) => c.id === nextClass.id);
 
   const promoteBtn = createEl("button", {
     className: "btn btn-secondary btn-sm",
-    title: nextClass ? `${t("school_rollover_already_promoted")}: ${nextClass.name} (${nextClass.schoolYear})` : t("school_btn_promote"),
+    title: isExistingValid ? `${t("school_rollover_already_promoted")}: ${nextClass.name} (${nextClass.schoolYear})` : t("school_btn_promote"),
     onClick: (e) => {
       e.stopPropagation();
-      showRolloverModal(cls, onRefresh, nextClass);
+      showRolloverModal(cls, onRefresh, isExistingValid ? nextClass : null, school);
     },
   }, [
     createEl("span", { className: "btn-icon" }, "↗️"),
@@ -30,10 +33,16 @@ export function createClassTreeNode(cls, students, onRefresh, allClasses = []) {
       e.stopPropagation();
       showStudentModal({ defaultClass: cls, onSaved: onRefresh });
     },
-  }, [
-    createEl("span", { className: "btn-icon" }, "+"),
-    createEl("span", { className: "btn-label", i18n: "school_btn_add_student_short" }),
-  ]);
+  }, [createEl("span", { className: "btn-label", i18n: "school_btn_add_student_short" })]);
+
+  const editClsBtn = createEl("button", {
+    className: "btn btn-secondary btn-sm btn-icon-only",
+    title: t("school_modal_edit_class"),
+    onClick: (e) => {
+      e.stopPropagation();
+      import("./classEditModal.js").then((m) => m.showClassEditModal({ cls, onSaved: onRefresh }));
+    },
+  }, "✏️");
 
   const delClsBtn = createEl("button", {
     className: "note-delete-btn btn-sm btn-icon-only",
@@ -48,18 +57,16 @@ export function createClassTreeNode(cls, students, onRefresh, allClasses = []) {
   }, "🗑");
 
   const badges = [createEl("span", { className: "badge" }, `${classStudents.length} alunni`)];
-  if (nextClass) {
-    badges.push(createEl("span", {
-      className: "badge badge-success",
-      title: `${t("school_rollover_promoted_badge")}: ${nextClass.name} (${nextClass.schoolYear})`,
-    }, `↗ ${nextClass.name} (${nextClass.schoolYear}) ✓`));
+  if (promo.isPromoted && promo.label) {
+    const tip = promo.status === "partial" ? t("school_rollover_status_partial") : t("school_rollover_status_complete");
+    badges.push(createEl("span", { className: `badge ${promo.badgeClass}`, title: tip }, promo.label));
   }
 
   return createTreeNode({
     icon: "🏢",
     title: `Classe ${cls.name}`,
     badges,
-    actions: [promoteBtn, addStBtn, delClsBtn],
+    actions: [promoteBtn, addStBtn, editClsBtn, delClsBtn],
     children: studentNodes,
   });
 }

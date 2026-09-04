@@ -40,14 +40,20 @@
   letter-spacing: 0.03em; color: var(--color-text-secondary); margin-bottom: 4px;
 }
 .note-item { position: relative; margin-bottom: 12px; padding: 14px 16px; }
-.note-meta {
-  display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+.note-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px;
 }
-.note-student { font-weight: 600; font-size: 0.88rem; color: var(--color-primary); }
-.note-date { font-size: 0.75rem; color: var(--color-text-muted); }
+.note-header-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.note-student { font-weight: 600; font-size: 0.92rem; color: var(--color-primary); }
+.note-class-badge {
+  font-size: 0.74rem; font-weight: 600; padding: 2px 7px; border-radius: var(--radius-sm);
+  background: var(--color-surface-hover); color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+.note-date { font-size: 0.78rem; color: var(--color-text-muted); font-weight: 500; white-space: nowrap; }
 .note-text {
-  font-size: 0.9rem; line-height: 1.5; color: var(--color-text-primary);
-  margin-bottom: 8px; white-space: pre-wrap;
+  font-size: 0.9rem; line-height: 1.55; color: var(--color-text-primary);
+  margin-bottom: 10px; white-space: pre-wrap;
 }
 .note-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .note-tags-list { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -59,3 +65,13 @@
   transition: all var(--transition-fast); flex-shrink: 0;
 }
 .note-delete-btn:hover { background-color: var(--color-danger-border); }
+.overview-year-nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
+.overview-year-btn {
+  padding: 4px 10px; font-size: 0.78rem; font-weight: 500; border-radius: var(--radius-pill);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  color: var(--color-text-secondary); cursor: pointer; transition: all var(--transition-fast);
+}
+.overview-year-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.overview-year-btn.active {
+  background: var(--color-primary); color: #fff; border-color: var(--color-primary); font-weight: 600;
+}

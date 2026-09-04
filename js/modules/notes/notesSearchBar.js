@@ -1,7 +1,10 @@
 import { createEl } from "../../utils/dom.js";
-import { generateStudentSummary } from "./notesModel.js";
+import { getNotes } from "./notesModel.js";
 import { showSummaryModal } from "./summaryModal.js";
-import { getActiveStudent } from "../../services/studentService.js";
+import { getActiveStudentId, getStudents } from "../../services/studentService.js";
+import { getSchools, getClasses, getSchoolConfig } from "../../services/schoolService.js";
+import { resolveTargetScope } from "./notesHierarchy.js";
+import { generateStructuredSummary } from "./notesSummaryGenerator.js";
 
 export function createSearchBar(onSearchChange) {
   let searchKeyword = "";
@@ -9,7 +12,7 @@ export function createSearchBar(onSearchChange) {
     className: "input-text",
     i18nPlaceholder: "notes_search_placeholder",
     onInput: (e) => {
-      searchKeyword = e.target.value;
+      searchKeyword = e.target.value.trim().toLowerCase();
       onSearchChange(searchKeyword);
     },
   });
@@ -18,9 +21,21 @@ export function createSearchBar(onSearchChange) {
     className: "btn btn-secondary",
     i18n: "notes_btn_summary",
     onClick: async () => {
-      const activeSt = await getActiveStudent();
-      const targetName = searchKeyword || (activeSt ? activeSt.name : "");
-      const summary = await generateStudentSummary(targetName);
+      const activeId = getActiveStudentId();
+      const [config, schools, classes, students, allNotes] = await Promise.all([
+        getSchoolConfig(), getSchools(), getClasses(), getStudents(), getNotes(),
+      ]);
+      const scope = resolveTargetScope(activeId, { schools, classes, students });
+      let notes = allNotes.filter(scope.filter);
+      if (searchKeyword) {
+        notes = notes.filter((n) =>
+          (n.content && n.content.toLowerCase().includes(searchKeyword)) ||
+          (n.tags && n.tags.some((t) => t.toLowerCase().includes(searchKeyword)))
+        );
+      }
+      const summary = generateStructuredSummary({
+        notes, activeId, schools, classes, students, keyword: searchKeyword, year: config.activeYear,
+      });
       showSummaryModal(summary);
     },
   });

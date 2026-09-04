@@ -26,11 +26,20 @@ export function createNoteItem(note, onDeleted, onEdit) {
     },
   }, "🗑");
 
-  return createEl("div", { className: "card note-item" }, [
-    createEl("div", { className: "note-meta" }, [
+  const classBadge = note.className && !isClass
+    ? createEl("span", { className: "note-class-badge" }, `🏢 ${note.className}`)
+    : null;
+
+  const headerRow = createEl("div", { className: "note-header" }, [
+    createEl("div", { className: "note-header-left" }, [
       createEl("span", { className: "note-student" }, `${icon} ${code}`),
-      createEl("span", { className: "note-date" }, new Date(note.createdAt).toLocaleDateString()),
-    ]),
+      classBadge,
+    ].filter(Boolean)),
+    createEl("span", { className: "note-date" }, new Date(note.createdAt).toLocaleDateString()),
+  ]);
+
+  return createEl("div", { className: "card note-item" }, [
+    headerRow,
     createEl("div", { className: "note-text" }, note.content),
     createEl("div", { className: "note-footer" }, [
       createEl("div", { className: "note-tags-list" }, (note.tags || []).map((tg) => createEl("span", { className: "badge" }, tg))),

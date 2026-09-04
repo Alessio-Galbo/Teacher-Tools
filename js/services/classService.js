@@ -1,5 +1,6 @@
-import { getAll, putItem, deleteItem } from "./db.js";
+import { getAll, putItem } from "./db.js";
 import { getSchoolConfig, getActiveSchoolId } from "./schoolService.js";
+import { removeClassAndCleanup } from "./classCleanupService.js";
 
 export async function getClasses(year = null, schoolId = null) {
   let classes = await getAll("classes");
@@ -32,6 +33,7 @@ export async function addClass(name, schoolYear, originClassId = null, schoolId 
     schoolId: targetSchool,
     schoolYear: targetYear,
     originClassId: originClassId || null,
+    didacticNotes: "",
     createdAt: new Date().toISOString(),
   };
   await putItem("classes", cls);
@@ -39,41 +41,27 @@ export async function addClass(name, schoolYear, originClassId = null, schoolId 
   return cls;
 }
 
-export async function removeClass(id) {
-  await deleteItem("classes", id);
-  window.dispatchEvent(new CustomEvent("classesChanged"));
-}
+export async function updateClass(id, updates) {
+  const cls = (await getAll("classes")).find((c) => c.id === id);
+  if (!cls) return null;
+  const oldName = cls.name;
+  const updated = { ...cls, ...updates };
+  await putItem("classes", updated);
 
-export async function rolloverClass(options) {
-  const { fromClassId, targetYear, destClassName, promotedStudents = [], retainedClassName, retainedStudents = [] } = options;
-  const { addStudent, getStudents, updateStudent } = await import("./studentService.js");
-  const allClasses = await getAll("classes");
-  const fromClass = allClasses.find((c) => c.id === fromClassId);
-  const destClass = await addClass(destClassName, targetYear, fromClassId, fromClass?.schoolId);
-
-  if (fromClass) {
-    fromClass.promotedToClassId = destClass.id;
-    fromClass.promotedToYear = targetYear;
-    fromClass.promotedToClassName = destClass.name;
-    await putItem("classes", fromClass);
-  }
-
-  const existingTargetStudents = await getStudents(targetYear);
-  for (const st of promotedStudents) {
-    const match = existingTargetStudents.find((s) => s.name.toLowerCase() === st.name.toLowerCase() && s.classId === destClass.id);
-    if (match) await updateStudent({ ...match, ...st, id: match.id, classId: destClass.id, className: destClass.name, schoolYear: targetYear });
-    else await addStudent({ ...st, classId: destClass.id, className: destClass.name, schoolYear: targetYear });
-  }
-
-  if (retainedStudents.length > 0 && retainedClassName) {
-    const retClass = await addClass(retainedClassName, targetYear, null, fromClass?.schoolId);
-    for (const st of retainedStudents) {
-      const match = existingTargetStudents.find((s) => s.name.toLowerCase() === st.name.toLowerCase() && s.classId === retClass.id);
-      if (match) await updateStudent({ ...match, ...st, id: match.id, classId: retClass.id, className: retClass.name, schoolYear: targetYear });
-      else await addStudent({ ...st, classId: retClass.id, className: retClass.name, schoolYear: targetYear });
+  if (updates.name && updates.name !== oldName) {
+    const students = await getAll("students");
+    for (const s of students) {
+      if (s.classId === id || s.className === oldName) {
+        s.className = updates.name;
+        await putItem("students", s);
+      }
     }
   }
+
   window.dispatchEvent(new CustomEvent("classesChanged"));
   window.dispatchEvent(new CustomEvent("studentListChanged"));
-  return destClass;
+  return updated;
 }
+
+export const removeClass = removeClassAndCleanup;
+export { rolloverClass } from "./classRolloverService.js";

@@ -4,9 +4,9 @@ import { showSchoolModal } from "./schoolModal.js";
 import { removeSchoolFromYear, addClass } from "../../services/schoolService.js";
 import { createClassTreeNode } from "./classTreeNode.js";
 
-export function createSchoolCard(school, classes, students, config, onRefresh, allClasses = []) {
+export function createSchoolCard(school, classes, students, config, onRefresh, allClasses = [], nextYearStudents = []) {
   const schClasses = classes.filter((c) => !c.schoolId || c.schoolId === school.id);
-  const classNodes = schClasses.map((cls) => createClassTreeNode(cls, students, onRefresh, allClasses));
+  const classNodes = schClasses.map((cls) => createClassTreeNode(cls, students, onRefresh, allClasses, nextYearStudents, school));
 
   const addClassBtn = createEl("button", {
     className: "btn btn-secondary btn-sm",

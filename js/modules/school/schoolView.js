@@ -4,15 +4,25 @@ import { getStudents } from "../../services/studentService.js";
 import { showSchoolModal } from "./schoolModal.js";
 import { createSchoolCard } from "./schoolCard.js";
 import { createDebouncedRenderer } from "../../utils/renderHelper.js";
+import { getNextSchoolYear } from "./rolloverHelper.js";
 
 let refreshViewFn = null;
 
 export function renderSchoolView(container) {
   clearEl(container);
 
-  const header = createEl("div", { className: "section-header" }, [
-    createEl("h2", { className: "section-title", i18n: "school_title" }),
-    createEl("p", { className: "section-subtitle", i18n: "school_subtitle" }),
+  const addSchoolBtn = createEl("button", {
+    className: "btn btn-primary",
+    i18n: "school_btn_add_school",
+    onClick: () => showSchoolModal({ onSaved: () => { if (refreshViewFn) refreshViewFn(); } }),
+  });
+
+  const header = createEl("div", { className: "section-header-row" }, [
+    createEl("div", { className: "section-header-info" }, [
+      createEl("h2", { className: "section-title", i18n: "school_title" }),
+      createEl("p", { className: "section-subtitle", i18n: "school_subtitle" }),
+    ]),
+    addSchoolBtn,
   ]);
 
   const schoolsContainer = createEl("div", { className: "schools-container" });
@@ -23,28 +33,23 @@ export function renderSchoolView(container) {
     const allClasses = await getClasses();
     const classes = allClasses.filter((c) => c.schoolYear === config.activeYear);
     const students = await getStudents(config.activeYear);
-
-    const addSchoolBtn = createEl("button", {
-      className: "btn btn-primary",
-      i18n: "school_btn_add_school",
-      onClick: () => showSchoolModal({ onSaved: () => { if (refreshViewFn) refreshViewFn(); } }),
-    });
-
-    const topBar = createEl("div", { className: "school-select-row" }, [addSchoolBtn]);
+    const nextYearStudents = await getStudents(getNextSchoolYear(config.activeYear));
 
     if (schools.length === 0) {
-      const emptyCard = createEl("div", { className: "card empty-card" }, [
+      const emptyBtn = createEl("button", {
+        className: "btn btn-primary",
+        i18n: "school_btn_add_school",
+        onClick: () => showSchoolModal({ onSaved: () => { if (refreshViewFn) refreshViewFn(); } }),
+      });
+      return [createEl("div", { className: "card empty-card" }, [
         createEl("p", { className: "text-muted", i18n: "school_no_schools_in_year" }),
-        createEl("div", { className: "form-group" }, [addSchoolBtn]),
-      ]);
-      return [topBar, emptyCard];
+        createEl("div", { className: "form-group" }, [emptyBtn]),
+      ])];
     }
 
-    const schoolCards = schools.map((sch) =>
-      createSchoolCard(sch, classes, students, config, () => { if (refreshViewFn) refreshViewFn(); }, allClasses)
+    return schools.map((sch) =>
+      createSchoolCard(sch, classes, students, config, () => { if (refreshViewFn) refreshViewFn(); }, allClasses, nextYearStudents)
     );
-
-    return [topBar, ...schoolCards];
   }
 
   refreshViewFn = createDebouncedRenderer(schoolsContainer, build);

@@ -4,6 +4,8 @@ import { showToast } from "../utils/toast.js";
 import { getSchoolConfig, updateSchoolConfig, addAcademicYear, removeAcademicYear } from "../services/schoolService.js";
 import { createDebouncedRenderer } from "../utils/renderHelper.js";
 
+import { showAddYearModal } from "../modules/school/yearSelectModal.js";
+
 export function initHeaderYearSelector(container) {
   if (!container) return;
   let isOpen = false;
@@ -24,15 +26,10 @@ export function initHeaderYearSelector(container) {
     const addRow = createEl("div", {
       className: "header-year-add-item",
       i18n: "school_dropdown_add_year",
-      onClick: async (e) => {
+      onClick: (e) => {
         e.stopPropagation();
         toggle(false);
-        const newY = prompt(t("school_prompt_year"));
-        if (newY && newY.trim()) {
-          await addAcademicYear(newY.trim());
-          showToast(t("school_year_added"), "success");
-          window.dispatchEvent(new CustomEvent("globalYearChanged"));
-        }
+        showAddYearModal();
       },
     });
 

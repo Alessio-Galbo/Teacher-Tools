@@ -14,10 +14,10 @@ export function showSummaryModal(summaryText) {
 
   const copyBtn = createEl("button", {
     className: "btn btn-primary btn-block",
-    i18n: "pei_btn_copy",
+    i18n: "notes_btn_copy_summary",
     onClick: () => {
       navigator.clipboard.writeText(summaryText).then(() => {
-        showToast(t("pei_btn_copied"), "success");
+        showToast(t("toast_saved"), "success");
       });
     },
   });

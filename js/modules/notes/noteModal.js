@@ -3,8 +3,8 @@ import { showToast } from "../../utils/toast.js";
 import { t } from "../../i18n.js";
 import { addNote, updateNote } from "./notesModel.js";
 import { getActiveStudent, getActiveStudentId } from "../../services/studentService.js";
-import { getSchools } from "../../services/schoolService.js";
-import { createTagGroupsBox } from "./noteTagGroups.js";
+import { getSchools, getSchoolConfig } from "../../services/schoolService.js";
+import { createNoteModalFields } from "./noteModalFields.js";
 
 export async function showNoteModal(options = {}) {
   const { note = null, onSaved = null } = options;
@@ -32,23 +32,32 @@ export async function showNoteModal(options = {}) {
   }
 
   let selectedTags = note && Array.isArray(note.tags) ? [...note.tags] : [];
-  const contentInput = createEl("textarea", { className: "textarea-input", i18nPlaceholder: "notes_content_placeholder" });
-  if (note && note.content) contentInput.value = note.content;
-
-  const closeModal = () => { overlay.classList.remove("active"); clearEl(overlay); };
-  const tagGroupsEl = createTagGroupsBox(selectedTags, (tagVal) => {
-    selectedTags = selectedTags.includes(tagVal) ? selectedTags.filter((x) => x !== tagVal) : [...selectedTags, tagVal];
+  const { container: bodyEl, dateInput, contentInput } = createNoteModalFields({
+    note,
+    onTagToggle: (val) => {
+      selectedTags = selectedTags.includes(val) ? selectedTags.filter((x) => x !== val) : [...selectedTags, val];
+    },
   });
 
+  const closeModal = () => { overlay.classList.remove("active"); clearEl(overlay); };
+
   const saveBtn = createEl("button", {
-    className: "btn btn-primary",
-    i18n: "notes_btn_add",
+    className: "btn btn-primary", i18n: "notes_btn_add",
     onClick: async () => {
       if (!contentInput.value.trim()) return;
+      const chosenDate = dateInput.value ? new Date(dateInput.value + "T12:00:00").toISOString() : new Date().toISOString();
       if (note) {
-        await updateNote(note.id, { content: contentInput.value.trim(), tags: selectedTags });
+        await updateNote(note.id, { content: contentInput.value.trim(), tags: selectedTags, createdAt: chosenDate });
       } else {
-        await addNote(target, contentInput.value.trim(), selectedTags, isClass);
+        const config = await getSchoolConfig();
+        const st = !isClass && activeId && !activeId.startsWith("school_") ? await getActiveStudent() : null;
+        const meta = {
+          schoolYear: config?.activeYear || "",
+          className: isClass ? target.replace(/^Classe\s+/, "") : (st?.className || ""),
+          studentId: st?.id || null, personId: st?.personId || null,
+          createdAt: chosenDate,
+        };
+        await addNote(target, contentInput.value.trim(), selectedTags, isClass, meta);
       }
       showToast(t("toast_saved"), "success");
       closeModal();
@@ -64,10 +73,7 @@ export async function showNoteModal(options = {}) {
       ]),
       createEl("button", { className: "modal-close-btn", onClick: closeModal }, "✕"),
     ]),
-    createEl("div", { className: "modal-body" }, [
-      createEl("div", { className: "form-group" }, [contentInput]),
-      tagGroupsEl,
-    ]),
+    bodyEl,
     createEl("div", { className: "modal-toolbar" }, [
       createEl("button", { className: "btn btn-secondary", i18n: "btn_cancel", onClick: closeModal }),
       saveBtn,

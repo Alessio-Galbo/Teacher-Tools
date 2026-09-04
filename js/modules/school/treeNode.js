@@ -13,7 +13,9 @@ export function createTreeNode(options = {}) {
     : null;
 
   const titleEl = createEl("span", { className: "card-title" }, `${icon} ${title}`);
-  const contentEl = createEl("div", { className: "tree-row-content" }, [toggleEl, titleEl, ...badges].filter(Boolean));
+  const badgesRow = badges.length > 0 ? createEl("div", { className: "tree-badges-row" }, badges) : null;
+  const labelGroup = createEl("div", { className: "tree-label-group" }, [titleEl, badgesRow].filter(Boolean));
+  const contentEl = createEl("div", { className: "tree-row-content" }, [toggleEl, labelGroup].filter(Boolean));
 
   if (hasChildren) {
     contentEl.onclick = () => {

@@ -1,63 +1,79 @@
 import { createEl, clearEl } from "../../utils/dom.js";
-import { t } from "../../i18n.js";
 import { getStudents, setActiveStudent } from "../../services/studentService.js";
+import { getSchoolConfig } from "../../services/schoolService.js";
+import { getAll } from "../../services/db.js";
 import { getNotes } from "../notes/notesModel.js";
+import { createClassOverviewBody } from "./classOverviewBody.js";
+import { showClassEditModal } from "./classEditModal.js";
 
-export async function showClassOverviewModal(className) {
+export async function showClassOverviewModal(classIdOrName, initialYear = null) {
   const overlay = document.getElementById("modal-container");
   if (!overlay) return;
-  clearEl(overlay);
 
-  const allStudents = await getStudents();
-  const classStudents = allStudents.filter((s) => s.className === className);
-  const notes = await getNotes(null, `Classe ${className}`);
+  const config = await getSchoolConfig();
+  const allClasses = await getAll("classes");
+  const cleanName = classIdOrName.replace(/^class_/, "").replace(/^Classe\s+/, "");
+  const matchingClasses = allClasses.filter((c) => c.name === cleanName || c.id === classIdOrName);
+  const availableYears = [...new Set(matchingClasses.map((c) => c.schoolYear).filter(Boolean))];
+  if (availableYears.length === 0 && config.activeYear) availableYears.push(config.activeYear);
 
-  const header = createEl("div", { className: "modal-header" }, [
-    createEl("h3", { className: "modal-title" }, `🏢 Classe ${className}`),
-    createEl("button", { className: "modal-close-btn", onClick: () => overlay.classList.remove("active") }, "✕"),
-  ]);
+  async function render(year) {
+    clearEl(overlay);
+    const targetClass = allClasses.find((c) => c.schoolYear === year && (c.name === cleanName || c.id === classIdOrName));
+    const yearStudents = await getStudents(year);
+    const rawClassStudents = yearStudents.filter((s) => (targetClass && s.classId === targetClass.id) || s.className === cleanName);
 
-  const studentChips = classStudents.map((st) =>
-    createEl("span", {
-      className: "overview-peer-chip",
-      onClick: () => {
+    const seen = new Set();
+    const classStudents = rawClassStudents.filter((s) => {
+      const k = s.personId || s.id;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+
+    const notes = (await getNotes(null, `Classe ${cleanName}`)).filter((n) => !n.schoolYear || n.schoolYear === year);
+
+    const yearNav = availableYears.length > 1 ? createEl("div", { className: "overview-year-nav" },
+      availableYears.map((yr) => createEl("button", {
+        className: `overview-year-btn ${yr === year ? "active" : ""}`,
+        onClick: () => render(yr),
+      }, `📅 ${yr}`))
+    ) : null;
+
+    const header = createEl("div", { className: "modal-header" }, [
+      createEl("h3", { className: "modal-title" }, `🏢 Classe ${cleanName}`),
+      createEl("button", { className: "modal-close-btn", onClick: () => overlay.classList.remove("active") }, "✕"),
+    ]);
+
+    const body = createClassOverviewBody({
+      yearNav,
+      targetClass,
+      classStudents,
+      notes,
+      onStudentClick: (st) => {
         setActiveStudent(st.id);
         overlay.classList.remove("active");
         import("./studentOverviewModal.js").then((m) => m.showStudentOverviewModal());
       },
-    }, `🎓 ${st.name} (${(st.supportType || "pei").toUpperCase()})`)
-  );
+      onEditDidactic: targetClass ? () => {
+        showClassEditModal(targetClass, () => render(year));
+      } : null,
+    });
 
-  const recentNotes = notes.slice(0, 3).map((n) =>
-    createEl("div", { className: "overview-note-item" }, [
-      createEl("div", { className: "note-meta" }, [
-        createEl("span", { className: "badge" }, n.tags.join(" ") || "#Classe"),
-        createEl("span", { className: "note-date" }, new Date(n.createdAt).toLocaleDateString()),
-      ]),
-      createEl("p", { className: "note-text" }, n.content),
-    ])
-  );
+    const toolbar = createEl("div", { className: "modal-toolbar" }, [
+      createEl("button", { className: "btn btn-secondary", i18n: "btn_close", onClick: () => overlay.classList.remove("active") }),
+      createEl("button", {
+        className: "btn btn-primary", i18n: "school_btn_view_diary",
+        onClick: () => {
+          overlay.classList.remove("active");
+          window.dispatchEvent(new CustomEvent("navigateToTab", { detail: "view-notes" }));
+        },
+      }),
+    ]);
 
-  const body = createEl("div", { className: "modal-body" }, [
-    createEl("div", { className: "form-group" }, [
-      createEl("label", { className: "form-label", i18n: "school_roster_label" }),
-      studentChips.length > 0 ? createEl("div", { className: "tags-bar" }, studentChips) : createEl("p", { className: "app-subtitle", i18n: "school_no_students_in_class" }),
-    ]),
-    createEl("div", { className: "form-group" }, [
-      createEl("label", { className: "form-label", i18n: "school_recent_notes" }),
-      recentNotes.length > 0 ? createEl("div", {}, recentNotes) : createEl("p", { className: "app-subtitle", i18n: "notes_empty" }),
-    ]),
-  ]);
+    overlay.appendChild(createEl("div", { className: "modal-box" }, [header, body, toolbar]));
+    overlay.classList.add("active");
+  }
 
-  const toolbar = createEl("div", { className: "modal-toolbar" }, [
-    createEl("button", { className: "btn btn-secondary", i18n: "btn_close", onClick: () => overlay.classList.remove("active") }),
-    createEl("button", {
-      className: "btn btn-primary",
-      i18n: "school_btn_view_diary",
-      onClick: () => { overlay.classList.remove("active"); window.dispatchEvent(new CustomEvent("navigateToTab", { detail: "view-notes" })); },
-    }),
-  ]);
-
-  overlay.appendChild(createEl("div", { className: "modal-box" }, [header, body, toolbar]));
-  overlay.classList.add("active");
+  await render(initialYear || config.activeYear);
 }

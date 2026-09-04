@@ -6,8 +6,8 @@ export async function getStudents(schoolYear = null) {
   let list = await getAll("students");
   if (list.length === 0) {
     const defaults = [
-      { id: "stud_1", name: "Studente L.", className: "3°A", schoolYear: "2024/2025", supportType: "pei", isPinned: true, createdAt: new Date().toISOString() },
-      { id: "stud_2", name: "Studente M.", className: "4°B", schoolYear: "2024/2025", supportType: "pei", isPinned: false, createdAt: new Date().toISOString() },
+      { id: "stud_1", personId: "p_stud_1", name: "Studente L.", className: "3°A", schoolYear: "2024/2025", supportType: "pei", isPinned: true, createdAt: new Date().toISOString() },
+      { id: "stud_2", personId: "p_stud_2", name: "Studente M.", className: "4°B", schoolYear: "2024/2025", supportType: "pei", isPinned: false, createdAt: new Date().toISOString() },
     ];
     for (const s of defaults) await putItem("students", s);
     if (!activeStudentId) setActiveStudent("stud_1");
@@ -23,6 +23,8 @@ export async function addStudent(data) {
   if (!name || !name.trim()) return null;
   const s = {
     id: "stud_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
+    personId: (isObj && (data.personId || data.id)) || ("p_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4)),
+    originStudentId: (isObj && (data.originStudentId || data.id)) || null,
     name: name.trim(),
     className: isObj ? (data.className || "") : "",
     classId: isObj ? (data.classId || "") : "",

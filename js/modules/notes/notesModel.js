@@ -1,7 +1,7 @@
 import { getAll, putItem, deleteItem } from "../../services/db.js";
 import { createSnapshot } from "../../services/snapshot.js";
 
-export async function addNote(targetCode, content, tags = [], isClassNote = false) {
+export async function addNote(targetCode, content, tags = [], isClassNote = false, meta = {}) {
   if (!targetCode.trim() || !content.trim()) throw new Error("Dati mancanti");
   const note = {
     id: "note_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
@@ -9,7 +9,9 @@ export async function addNote(targetCode, content, tags = [], isClassNote = fals
     isClassNote: Boolean(isClassNote),
     content: content.trim(),
     tags: Array.isArray(tags) ? tags : [],
-    createdAt: new Date().toISOString(),
+    schoolYear: meta.schoolYear || "",
+    className: meta.className || (isClassNote ? targetCode.replace(/^Classe\s+/, "") : ""),
+    createdAt: meta.createdAt || new Date().toISOString(),
   };
   await putItem("notes", note);
   await createSnapshot("Nuova Nota: " + note.studentCode);
@@ -33,6 +35,21 @@ export async function getNotes(filterTag = null, searchKeyword = "") {
   const clsName = matched && matched.className ? matched.className.toLowerCase() : "";
 
   return notes
+    .map((n) => {
+      if (!n.schoolYear && n.createdAt) {
+        const d = new Date(n.createdAt);
+        const y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1;
+        n.schoolYear = `${y}/${y + 1}`;
+      }
+      if (!n.className) {
+        if (n.isClassNote) n.className = (n.studentCode || "").replace(/^Classe\s+/, "");
+        else {
+          const st = students.find((s) => s.name === n.studentCode);
+          if (st?.className) n.className = st.className;
+        }
+      }
+      return n;
+    })
     .filter((n) => {
       if (filterTag && !n.tags.includes(filterTag)) return false;
       if (!kw) return true;

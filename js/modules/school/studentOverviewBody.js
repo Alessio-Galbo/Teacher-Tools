@@ -2,7 +2,14 @@ import { createEl } from "../../utils/dom.js";
 import { t } from "../../i18n.js";
 
 export function createStudentOverviewBody(options) {
-  const { activeSt, peers = [], notes = [], schoolName = "", year = "", onPeerSelect } = options;
+  const { activeSt, peers = [], notes = [], schoolName = "", year = "", availableYears = [], onPeerSelect, onYearSelect } = options;
+
+  const yearNav = availableYears.length > 1 ? createEl("div", { className: "overview-year-nav" },
+    availableYears.map((yr) => createEl("button", {
+      className: `overview-year-btn ${yr === year ? "active" : ""}`,
+      onClick: () => { if (onYearSelect) onYearSelect(yr); },
+    }, `📅 ${yr}`))
+  ) : null;
 
   const infoGrid = createEl("div", { className: "overview-grid" }, [
     createEl("div", { className: "overview-info-item" }, [
@@ -30,26 +37,21 @@ export function createStudentOverviewBody(options) {
     createEl("p", { className: "note-text" }, `🔒 ${activeSt.notes}`),
   ]) : null;
 
-  const peerChips = peers.map((p) =>
-    createEl("span", {
-      className: "overview-peer-chip",
-      onClick: () => { if (onPeerSelect) onPeerSelect(p.id); },
-    }, `🎓 ${p.name}`)
-  );
+  const peerChips = peers.map((p) => createEl("span", {
+    className: "overview-peer-chip",
+    onClick: () => { if (onPeerSelect) onPeerSelect(p.id); },
+  }, `🎓 ${p.name}`));
 
-  const recentNotes = notes.slice(0, 3).map((n) =>
-    createEl("div", { className: "overview-note-item" }, [
-      createEl("div", { className: "note-meta" }, [
-        createEl("span", { className: "badge" }, n.tags.join(" ") || "#Osservazione"),
-        createEl("span", { className: "note-date" }, new Date(n.createdAt).toLocaleDateString()),
-      ]),
-      createEl("p", { className: "note-text" }, n.content),
-    ])
-  );
+  const recentNotes = notes.slice(0, 3).map((n) => createEl("div", { className: "overview-note-item" }, [
+    createEl("div", { className: "note-meta" }, [
+      createEl("span", { className: "badge" }, n.tags.join(" ") || "#Osservazione"),
+      createEl("span", { className: "note-date" }, new Date(n.createdAt).toLocaleDateString()),
+    ]),
+    createEl("p", { className: "note-text" }, n.content),
+  ]));
 
   return createEl("div", { className: "modal-body" }, [
-    infoGrid,
-    privateNotesBox,
+    yearNav, infoGrid, privateNotesBox,
     peers.length > 0 ? createEl("div", { className: "form-group" }, [
       createEl("label", { className: "form-label", i18n: "school_peers_label" }),
       createEl("div", { className: "tags-bar" }, peerChips),
