@@ -1,13 +1,14 @@
 import { createEl } from "../utils/dom.js";
 import { t } from "../i18n.js";
 import { buildDropdownItems } from "./studentDropdownItems.js";
+import { showStudentModal } from "../modules/school/studentModal.js";
 
 export function createStudentSearchDropdown(data, activeId, onSelect) {
-  const { config, schools, students } = data;
+  const { schools, students } = data;
   let isOpen = false;
 
   const getCleanLabel = () => {
-    if (activeId === "__ALL__" || !activeId) return `📅 ${t("student_all")} (A.S. ${config.activeYear})`;
+    if (activeId === "__ALL__" || !activeId) return `📅 ${t("student_all")}`;
     if (activeId.startsWith("school_")) {
       const s = schools.find((x) => `school_${x.id}` === activeId);
       return s ? `🏫 ${s.name}` : `🏫 Scuola`;
@@ -33,10 +34,21 @@ export function createStudentSearchDropdown(data, activeId, onSelect) {
     onInput: (e) => filterList(e.target.value.trim().toLowerCase()),
   });
 
+  const addStudentBtn = createEl("button", {
+    className: "student-dropdown-add-btn",
+    type: "button",
+    i18n: "student_dropdown_add_btn",
+    onClick: (e) => {
+      e.stopPropagation();
+      toggleDropdown(false);
+      showStudentModal({ onSaved: () => window.dispatchEvent(new CustomEvent("studentListChanged")) });
+    },
+  });
+
   const emptyMsg = createEl("div", { className: "student-dropdown-empty hidden", i18n: "student_search_empty" });
   const listEl = createEl("div", { className: "student-dropdown-list" });
 
-  buildDropdownItems(listEl, data, activeId, onSelect, (selectedId) => {
+  buildDropdownItems(listEl, data, activeId, onSelect, () => {
     toggleDropdown(false);
     triggerText.textContent = getCleanLabel();
   });
@@ -53,7 +65,7 @@ export function createStudentSearchDropdown(data, activeId, onSelect) {
   }
 
   const menu = createEl("div", { className: "student-dropdown-menu" }, [
-    createEl("div", { className: "student-dropdown-search-wrap" }, [searchInput]),
+    createEl("div", { className: "student-dropdown-search-wrap" }, [searchInput, addStudentBtn]),
     emptyMsg,
     listEl,
   ]);

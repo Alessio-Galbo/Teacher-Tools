@@ -16,23 +16,28 @@ export async function addNote(targetCode, content, tags = [], isClassNote = fals
   return note;
 }
 
+export async function updateNote(id, updates) {
+  const notes = await getAll("notes");
+  const existing = notes.find((n) => n.id === id);
+  if (!existing) throw new Error("Nota non trovata");
+  const merged = { ...existing, ...updates, updatedAt: new Date().toISOString() };
+  await putItem("notes", merged);
+  await createSnapshot("Modifica Nota: " + (merged.studentCode || id));
+  return merged;
+}
+
 export async function getNotes(filterTag = null, searchKeyword = "") {
   const [notes, students] = await Promise.all([getAll("notes"), getAll("students")]);
   const kw = searchKeyword.toLowerCase().trim();
-  const matchedStudent = kw ? students.find((s) => s.name.toLowerCase() === kw) : null;
-  const studentClassName = matchedStudent && matchedStudent.className ? matchedStudent.className.toLowerCase() : "";
+  const matched = kw ? students.find((s) => s.name.toLowerCase() === kw) : null;
+  const clsName = matched && matched.className ? matched.className.toLowerCase() : "";
 
   return notes
     .filter((n) => {
-      const matchTag = !filterTag || n.tags.includes(filterTag);
-      if (!matchTag) return false;
+      if (filterTag && !n.tags.includes(filterTag)) return false;
       if (!kw) return true;
-
-      const codeLower = n.studentCode.toLowerCase();
-      const matchDirect = codeLower.includes(kw) || n.content.toLowerCase().includes(kw);
-      const matchClassInherit = studentClassName && (codeLower === `classe ${studentClassName}` || codeLower === studentClassName);
-
-      return matchDirect || matchClassInherit;
+      const code = (n.studentCode || "").toLowerCase();
+      return code.includes(kw) || n.content.toLowerCase().includes(kw) || (clsName && (code === `classe ${clsName}` || code === clsName));
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
@@ -47,22 +52,14 @@ export async function generateStudentSummary(targetCode) {
   if (allNotes.length === 0) return "Nessuna osservazione registrata.";
 
   const byTag = {};
-  allNotes.forEach((n) => {
-    n.tags.forEach((t) => { byTag[t] = (byTag[t] || 0) + 1; });
-  });
-
-  const tagSummary = Object.entries(byTag)
-    .map(([tag, count]) => `${tag}: ${count} osservazioni`)
-    .join(", ");
+  allNotes.forEach((n) => { n.tags.forEach((t) => { byTag[t] = (byTag[t] || 0) + 1; }); });
+  const tagSummary = Object.entries(byTag).map(([t, c]) => `${t}: ${c}`).join(", ");
 
   const lines = [
-    `RELAZIONE PERIODICA DI OSSERVAZIONE D'AULA`,
-    `Destinatario: ${targetCode}`,
-    `Data: ${new Date().toLocaleDateString()}`,
-    `Numero osservazioni: ${allNotes.length}`,
-    `Indicatori: ${tagSummary || "Generale"}`,
-    `\nCRONOLOGIA OSSERVAZIONI:`,
-    ...allNotes.map((n, i) => `${i + 1}. [${new Date(n.createdAt).toLocaleDateString()}] ${n.isClassNote ? "(Nota di Classe) " : ""}${n.content}`),
+    `RELAZIONE OSSERVAZIONE D'AULA - Destinatario: ${targetCode}`,
+    `Data: ${new Date().toLocaleDateString()} | Totale Note: ${allNotes.length}`,
+    `Tag: ${tagSummary || "Generale"}\n`,
+    ...allNotes.map((n, i) => `${i + 1}. [${new Date(n.createdAt).toLocaleDateString()}] ${n.content}`),
   ];
   return lines.join("\n");
 }

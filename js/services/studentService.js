@@ -22,10 +22,11 @@ export async function addStudent(data) {
   const name = isObj ? data.name : data;
   if (!name || !name.trim()) return null;
   const s = {
-    id: "stud_" + Date.now(),
+    id: "stud_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
     name: name.trim(),
     className: isObj ? (data.className || "") : "",
     classId: isObj ? (data.classId || "") : "",
+    schoolId: isObj ? (data.schoolId || "") : "",
     schoolYear: isObj ? (data.schoolYear || "") : "",
     supportType: isObj ? (data.supportType || "pei") : "pei",
     notes: isObj ? (data.notes || "") : "",

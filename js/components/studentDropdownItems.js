@@ -18,7 +18,7 @@ export function buildDropdownItems(listEl, data, activeId, onSelect, onDone) {
     return item;
   };
 
-  listEl.appendChild(makeItem("__ALL__", `📅 ${t("student_all")} (A.S. ${config.activeYear})`, "level-root", "tutti"));
+  listEl.appendChild(makeItem("__ALL__", `📅 ${t("student_all")}`, "level-root", "tutti"));
   if (pinned.length > 0) {
     listEl.appendChild(createEl("div", { className: "student-dropdown-header" }, `── 📌 ${t("student_group_pinned")} ──`));
     pinned.forEach((s) => listEl.appendChild(makeItem(s.id, `📌 ${s.name}${s.className ? ` (${s.className})` : ""}`, "level-class", s.name)));

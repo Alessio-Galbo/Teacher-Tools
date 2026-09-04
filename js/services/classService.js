@@ -46,15 +46,31 @@ export async function removeClass(id) {
 
 export async function rolloverClass(options) {
   const { fromClassId, targetYear, destClassName, promotedStudents = [], retainedClassName, retainedStudents = [] } = options;
-  const { addStudent } = await import("./studentService.js");
-  const destClass = await addClass(destClassName, targetYear, fromClassId);
-  for (const st of promotedStudents) {
-    await addStudent({ ...st, classId: destClass.id, className: destClass.name, schoolYear: targetYear });
+  const { addStudent, getStudents, updateStudent } = await import("./studentService.js");
+  const allClasses = await getAll("classes");
+  const fromClass = allClasses.find((c) => c.id === fromClassId);
+  const destClass = await addClass(destClassName, targetYear, fromClassId, fromClass?.schoolId);
+
+  if (fromClass) {
+    fromClass.promotedToClassId = destClass.id;
+    fromClass.promotedToYear = targetYear;
+    fromClass.promotedToClassName = destClass.name;
+    await putItem("classes", fromClass);
   }
+
+  const existingTargetStudents = await getStudents(targetYear);
+  for (const st of promotedStudents) {
+    const match = existingTargetStudents.find((s) => s.name.toLowerCase() === st.name.toLowerCase() && s.classId === destClass.id);
+    if (match) await updateStudent({ ...match, ...st, id: match.id, classId: destClass.id, className: destClass.name, schoolYear: targetYear });
+    else await addStudent({ ...st, classId: destClass.id, className: destClass.name, schoolYear: targetYear });
+  }
+
   if (retainedStudents.length > 0 && retainedClassName) {
-    const retClass = await addClass(retainedClassName, targetYear);
+    const retClass = await addClass(retainedClassName, targetYear, null, fromClass?.schoolId);
     for (const st of retainedStudents) {
-      await addStudent({ ...st, classId: retClass.id, className: retClass.name, schoolYear: targetYear });
+      const match = existingTargetStudents.find((s) => s.name.toLowerCase() === st.name.toLowerCase() && s.classId === retClass.id);
+      if (match) await updateStudent({ ...match, ...st, id: match.id, classId: retClass.id, className: retClass.name, schoolYear: targetYear });
+      else await addStudent({ ...st, classId: retClass.id, className: retClass.name, schoolYear: targetYear });
     }
   }
   window.dispatchEvent(new CustomEvent("classesChanged"));

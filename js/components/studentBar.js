@@ -27,10 +27,9 @@ export function initStudentBar(container) {
     );
 
     const label = createEl("label", { className: "student-bar-label", i18n: "student_selector_label" });
-    const addBtn = createEl("button", { className: "student-bar-btn", title: t("student_modal_new"), onClick: () => showStudentModal({ onSaved: render }) }, "+");
     const overviewBtn = createEl("button", { className: "student-bar-btn", title: t("school_overview_btn"), onClick: () => showStudentOverviewModal() }, "📜");
 
-    return createEl("div", { className: "student-bar-inner" }, [label, dropdown, addBtn, overviewBtn]);
+    return createEl("div", { className: "student-bar-inner" }, [label, dropdown, overviewBtn]);
   }
 
   const render = createDebouncedRenderer(container, build);

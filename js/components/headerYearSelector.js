@@ -6,54 +6,75 @@ import { createDebouncedRenderer } from "../utils/renderHelper.js";
 
 export function initHeaderYearSelector(container) {
   if (!container) return;
+  let isOpen = false;
 
   async function build() {
     const config = await getSchoolConfig();
-    const sortedYears = [...config.years].sort((a, b) => b.localeCompare(a));
-    const options = sortedYears.map((y) =>
-      createEl("option", { value: y, selected: config.activeYear === y }, `📅 ${y}`)
-    );
+    const sorted = [...config.years].sort((a, b) => b.localeCompare(a));
 
-    const selectEl = createEl("select", {
-      className: "header-year-select",
-      onChange: async (e) => {
-        await updateSchoolConfig({ activeYear: e.target.value });
-        window.dispatchEvent(new CustomEvent("globalYearChanged"));
-        render();
-      },
-    }, options);
+    const trigger = createEl("button", {
+      className: "header-year-trigger",
+      type: "button",
+      onClick: (e) => { e.stopPropagation(); toggle(!isOpen); },
+    }, [
+      createEl("span", {}, `📅 ${config.activeYear}`),
+      createEl("span", { className: "header-year-chevron" }, "▾"),
+    ]);
 
-    const addBtn = createEl("button", {
-      className: "btn btn-secondary btn-sm",
-      title: t("school_btn_add_year_title"),
-      onClick: async () => {
+    const addRow = createEl("div", {
+      className: "header-year-add-item",
+      i18n: "school_dropdown_add_year",
+      onClick: async (e) => {
+        e.stopPropagation();
+        toggle(false);
         const newY = prompt(t("school_prompt_year"));
         if (newY && newY.trim()) {
           await addAcademicYear(newY.trim());
           showToast(t("school_year_added"), "success");
           window.dispatchEvent(new CustomEvent("globalYearChanged"));
-          render();
         }
       },
-    }, "+");
+    });
 
-    let delBtn = null;
-    if (config.years && config.years.length > 1) {
-      delBtn = createEl("button", {
-        className: "note-delete-btn btn-sm",
-        title: t("school_btn_remove_year_title"),
-        onClick: async () => {
-          if (confirm(`${t("school_year_remove_confirm")} (${config.activeYear})`)) {
-            await removeAcademicYear(config.activeYear);
-            showToast(t("school_year_removed"), "info");
+    const yearRows = sorted.map((y) => {
+      const isAct = y === config.activeYear;
+      const labelEl = createEl("span", {
+        className: "header-year-name",
+        onClick: async (e) => {
+          e.stopPropagation();
+          toggle(false);
+          if (!isAct) {
+            await updateSchoolConfig({ activeYear: y });
             window.dispatchEvent(new CustomEvent("globalYearChanged"));
-            render();
           }
         },
-      }, "🗑");
-    }
+      }, `${isAct ? "✓ " : ""}${y}`);
 
-    return [selectEl, addBtn, ...(delBtn ? [delBtn] : [])];
+      const delBtn = config.years.length > 1
+        ? createEl("button", {
+            className: "note-delete-btn btn-sm",
+            title: t("school_btn_remove_year_title"),
+            onClick: async (e) => {
+              e.stopPropagation();
+              if (confirm(`${t("school_year_remove_confirm_short")} (${y})`)) {
+                await removeAcademicYear(y);
+                showToast(t("school_year_removed"), "info");
+                window.dispatchEvent(new CustomEvent("globalYearChanged"));
+              }
+            },
+          }, "🗑")
+        : null;
+
+      return createEl("div", { className: `header-year-item ${isAct ? "active" : ""}` }, [labelEl, delBtn].filter(Boolean));
+    });
+
+    const menu = createEl("div", { className: "header-year-menu" }, [addRow, ...yearRows]);
+    const toggle = (open) => { isOpen = open; menu.classList.toggle("open", isOpen); };
+
+    document.addEventListener("click", () => { if (isOpen) toggle(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen) toggle(false); });
+
+    return createEl("div", { className: "header-year-dropdown" }, [trigger, menu]);
   }
 
   const render = createDebouncedRenderer(container, build);

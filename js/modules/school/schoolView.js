@@ -20,7 +20,8 @@ export function renderSchoolView(container) {
   async function build() {
     const config = await getSchoolConfig();
     const schools = await getSchools(config.activeYear);
-    const classes = await getClasses(config.activeYear);
+    const allClasses = await getClasses();
+    const classes = allClasses.filter((c) => c.schoolYear === config.activeYear);
     const students = await getStudents(config.activeYear);
 
     const addSchoolBtn = createEl("button", {
@@ -29,10 +30,7 @@ export function renderSchoolView(container) {
       onClick: () => showSchoolModal({ onSaved: () => { if (refreshViewFn) refreshViewFn(); } }),
     });
 
-    const topBar = createEl("div", { className: "school-select-row" }, [
-      createEl("span", { className: "badge badge-primary" }, `A.S. ${config.activeYear}`),
-      addSchoolBtn,
-    ]);
+    const topBar = createEl("div", { className: "school-select-row" }, [addSchoolBtn]);
 
     if (schools.length === 0) {
       const emptyCard = createEl("div", { className: "card empty-card" }, [
@@ -43,7 +41,7 @@ export function renderSchoolView(container) {
     }
 
     const schoolCards = schools.map((sch) =>
-      createSchoolCard(sch, classes, students, config, () => { if (refreshViewFn) refreshViewFn(); })
+      createSchoolCard(sch, classes, students, config, () => { if (refreshViewFn) refreshViewFn(); }, allClasses)
     );
 
     return [topBar, ...schoolCards];
