@@ -7,7 +7,7 @@ export function createCloudCard(onStateChanged) {
   const state = getGDriveState();
   const hasClientId = Boolean(getStoredClientId());
   const statusBadge = createEl("span", {
-    className: `badge ${state.isConnected ? "badge-primary" : ""}`,
+    className: `badge ${state.isConnected ? "badge-primary" : ""} settings-status-badge`,
   }, state.isConnected ? `${t("settings_cloud_status_on")} ${state.email}` : t("settings_cloud_status_off"));
 
   let buttons = [];
@@ -57,11 +57,11 @@ export function createCloudCard(onStateChanged) {
   }
 
   return createEl("div", { className: "card" }, [
-    createEl("div", { className: "card-header" }, [
+    createEl("div", { className: "card-header settings-card-header" }, [
       createEl("h3", { className: "card-title", i18n: "settings_cloud_title" }),
       statusBadge,
     ]),
-    createEl("p", { className: "section-subtitle", i18n: "settings_cloud_desc" }),
-    createEl("div", { className: "pei-dim-tabs" }, buttons),
+    createEl("p", { className: "card-desc text-muted", i18n: "settings_cloud_desc" }),
+    createEl("div", { className: "settings-backup-grid" }, buttons),
   ]);
 }

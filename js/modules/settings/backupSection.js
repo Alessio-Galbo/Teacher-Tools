@@ -48,7 +48,7 @@ export function createBackupSection() {
 
   return createEl("div", { className: "card" }, [
     createEl("h3", { className: "card-title", i18n: "settings_backup_title" }),
-    createEl("div", { className: "pei-dim-tabs" }, [shareBtn, exportBtn, importBtn, fileInput]),
+    createEl("div", { className: "settings-backup-grid" }, [shareBtn, exportBtn, importBtn, fileInput]),
     hintEl,
   ]);
 }

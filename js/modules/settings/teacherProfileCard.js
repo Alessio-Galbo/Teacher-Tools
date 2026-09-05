@@ -16,7 +16,6 @@ export function createTeacherProfileCard(onRefresh = null) {
     placeholder: t("settings_teacher_name_placeholder")
   });
   nameGroup.appendChild(nameInp);
-  form.appendChild(nameGroup);
 
   const subjGroup = createEl("div", { className: "form-group" });
   subjGroup.appendChild(createEl("label", { className: "form-label", i18n: "settings_teacher_subject_label" }, t("settings_teacher_subject_label")));
@@ -25,7 +24,11 @@ export function createTeacherProfileCard(onRefresh = null) {
     placeholder: t("settings_teacher_subject_placeholder")
   });
   subjGroup.appendChild(subjInp);
-  form.appendChild(subjGroup);
+
+  const grid = createEl("div", { className: "settings-teacher-grid" });
+  grid.appendChild(nameGroup);
+  grid.appendChild(subjGroup);
+  form.appendChild(grid);
 
   const saveBtn = createEl("button", { className: "btn btn-primary btn-block", i18n: "btn_save" }, t("btn_save"));
   saveBtn.addEventListener("click", async () => {

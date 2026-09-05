@@ -15,19 +15,20 @@ function makeField(labelKey, input) {
 export function createQuizHeaderCard(state, academicYear, onLoad, onReset, onPointsChange) {
   const metaCard = createEl("div", { className: "card quiz-meta-card" });
   const head = createEl("div", { className: "card-header" });
-  head.appendChild(createEl("h3", { className: "card-title" }, "1. Intestazione & Archivio"));
+  head.appendChild(createEl("h3", { className: "card-title", i18n: "quiz_card_header_title" }, t("quiz_card_header_title")));
+  metaCard.appendChild(head);
 
-  const headActions = createEl("div", { className: "quiz-card-actions" });
+  const headActions = createEl("div", { className: "quiz-head-actions-row" });
   if (onReset) {
-    const newBtn = createEl("button", { className: "btn btn-secondary btn-sm", i18n: "quiz_btn_new_empty" }, t("quiz_btn_new_empty"));
+    const newBtn = createEl("button", { className: "btn btn-secondary btn-sm", i18n: "quiz_btn_new_short" }, t("quiz_btn_new_short"));
     newBtn.addEventListener("click", onReset);
     headActions.appendChild(newBtn);
   }
-  const savedBtn = createEl("button", { className: "btn btn-secondary btn-sm", i18n: "quiz_btn_saved_list" }, t("quiz_btn_saved_list"));
+  const savedBtn = createEl("button", { className: "btn btn-secondary btn-sm", i18n: "quiz_btn_saved_short" }, t("quiz_btn_saved_short"));
   savedBtn.addEventListener("click", () => showQuizSavedModal(academicYear, onLoad));
   headActions.appendChild(savedBtn);
 
-  const saveBtn = createEl("button", { className: "btn btn-primary btn-sm" }, state.id ? t("quiz_btn_update") : t("quiz_btn_save"));
+  const saveBtn = createEl("button", { className: "btn btn-primary btn-sm" }, state.id ? t("quiz_btn_update") : t("quiz_btn_save_short"));
   saveBtn.addEventListener("click", async () => {
     const saved = await saveQuiz({
       id: state.id, title: state.title, topic: state.topic, subject: state.subject,
@@ -39,8 +40,7 @@ export function createQuizHeaderCard(state, academicYear, onLoad, onReset, onPoi
     renderStatus();
   });
   headActions.appendChild(saveBtn);
-  head.appendChild(headActions);
-  metaCard.appendChild(head);
+  metaCard.appendChild(headActions);
 
   const statusBox = createEl("div", { className: "quiz-status-banner" });
   metaCard.appendChild(statusBox);
@@ -49,7 +49,7 @@ export function createQuizHeaderCard(state, academicYear, onLoad, onReset, onPoi
     clearEl(statusBox);
     statusBox.className = `quiz-status-banner ${state.id ? "active-saved" : ""}`;
     statusBox.textContent = state.id ? `✏️ ${t("quiz_status_editing")} "${state.title || state.topic || 'Verifica'}"` : `📝 ${t("quiz_status_new")}`;
-    saveBtn.textContent = state.id ? t("quiz_btn_update") : t("quiz_btn_save");
+    saveBtn.textContent = state.id ? t("quiz_btn_update") : t("quiz_btn_save_short");
   };
 
   const grid = createEl("div", { className: "quiz-meta-grid" });
@@ -60,11 +60,14 @@ export function createQuizHeaderCard(state, academicYear, onLoad, onReset, onPoi
   const topicInp = createEl("input", { type: "text", className: "input-text", placeholder: t("quiz_topic_placeholder"), value: state.topic || "" });
   topicInp.addEventListener("input", (e) => { state.topic = e.target.value; renderStatus(); });
 
-  const { box: scoreBox, maxScoreInp, autoCheck, recalcAutoScore } = createMaxScoreBox(state, onPointsChange);
+  const { box: scoreBox, maxScoreInp, syncAutoState, recalcAutoScore } = createMaxScoreBox(state, onPointsChange);
+
+  const subRow = createEl("div", { className: "quiz-meta-subrow" });
+  subRow.appendChild(makeField("quiz_subject_label", subjInp));
+  subRow.appendChild(makeField("quiz_topic_label", topicInp));
 
   grid.appendChild(makeField("quiz_title_label", titleInp));
-  grid.appendChild(makeField("quiz_subject_label", subjInp));
-  grid.appendChild(makeField("quiz_topic_label", topicInp));
+  grid.appendChild(subRow);
   grid.appendChild(makeField("quiz_max_score_label", scoreBox));
   metaCard.appendChild(grid);
 
@@ -74,9 +77,9 @@ export function createQuizHeaderCard(state, academicYear, onLoad, onReset, onPoi
     topicInp.value = state.topic || "";
     if (maxScoreInp) {
       maxScoreInp.value = state.maxScore;
-      maxScoreInp.disabled = state.autoCalcPoints;
+      maxScoreInp.disabled = Boolean(state.autoCalcPoints);
     }
-    if (autoCheck) autoCheck.checked = state.autoCalcPoints;
+    if (syncAutoState) syncAutoState();
     renderStatus();
   };
 

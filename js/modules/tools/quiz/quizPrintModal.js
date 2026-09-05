@@ -60,7 +60,8 @@ export async function showQuizPrintModal(meta, variantName, questions, initialSc
       : `📄 ${t("quiz_print_btn")}`;
     const vars = isAll ? meta.variants : [{ name: variantName, questions }];
     vars.forEach((v, idx) => {
-      body.appendChild(renderPrintSheet(fullMeta, v.name, v.questions, curPref, idx < vars.length - 1));
+      const vStamp = meta.variants?.length > 1 ? v.name : null;
+      body.appendChild(renderPrintSheet(fullMeta, vStamp, v.questions, curPref, idx < vars.length - 1));
     });
   };
   renderSheets();

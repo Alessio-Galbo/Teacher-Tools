@@ -17,12 +17,29 @@ const SUB_MODULES = [
 export function renderToolsView(container) {
   clearEl(container);
 
-  const header = createEl("div", { className: "view-header" });
-  const titleGroup = createEl("div");
-  titleGroup.appendChild(createEl("h2", { className: "view-title", i18n: "tools_title" }, t("tools_title")));
-  titleGroup.appendChild(createEl("p", { className: "view-subtitle", i18n: "tools_subtitle" }, t("tools_subtitle")));
+  const header = createEl("div", { className: "section-header-row" });
+  const titleGroup = createEl("div", { className: "section-header-info" });
+  titleGroup.appendChild(createEl("h2", { className: "section-title", i18n: "tools_title" }, t("tools_title")));
+  titleGroup.appendChild(createEl("p", { className: "section-subtitle", i18n: "tools_subtitle" }, t("tools_subtitle")));
   header.appendChild(titleGroup);
   container.appendChild(header);
+
+  const selectWrap = createEl("div", { className: "tools-select-wrap" });
+  const dropdown = createEl("select", { className: "select-input tools-subnav-dropdown" });
+  SUB_MODULES.forEach((mod) => {
+    const opt = createEl("option", { value: mod.id, i18n: mod.labelKey }, t(mod.labelKey));
+    if (mod.id === currentSubTab) opt.selected = true;
+    dropdown.appendChild(opt);
+  });
+  dropdown.addEventListener("change", () => {
+    currentSubTab = dropdown.value;
+    subNav.querySelectorAll(".tools-subnav-btn").forEach((b, idx) => {
+      b.classList.toggle("active", SUB_MODULES[idx].id === currentSubTab);
+    });
+    mountSubModule(contentArea, SUB_MODULES.find((m) => m.id === currentSubTab));
+  });
+  selectWrap.appendChild(dropdown);
+  container.appendChild(selectWrap);
 
   const subNav = createEl("div", { className: "tools-subnav" });
   SUB_MODULES.forEach((mod) => {
@@ -33,6 +50,7 @@ export function renderToolsView(container) {
 
     btn.addEventListener("click", () => {
       currentSubTab = mod.id;
+      dropdown.value = mod.id;
       subNav.querySelectorAll(".tools-subnav-btn").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       mountSubModule(contentArea, mod);

@@ -6,9 +6,10 @@ const FIELD_DEFS = [
   { key: "teacher", label: "quiz_field_teacher" },
   { key: "student", label: "quiz_field_student" },
   { key: "dateClass", label: "quiz_field_date_class" },
+  { key: "subject", label: "quiz_field_subject" },
+  { key: "topic", label: "quiz_field_topic" },
   { key: "points", label: "quiz_field_points" },
   { key: "vote", label: "quiz_field_vote" },
-  { key: "topic", label: "quiz_field_topic" },
   { key: "instructions", label: "quiz_field_instructions" },
   { key: "pointsTag", label: "quiz_field_points_tag" }
 ];

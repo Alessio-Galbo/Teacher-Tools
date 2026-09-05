@@ -60,11 +60,16 @@ export function renderPrintHeader(meta, variantName, pref = {}, totalPoints = 10
 
   const mainRow = createEl("div", { className: "quiz-print-main-row" });
   const titleGroup = createEl("div", { className: "quiz-print-title-group" });
-  const defaultTitle = meta.subject ? `${t("quiz_print_title")} (${meta.subject})` : t("quiz_print_title");
+  const defaultTitle = t("quiz_print_title");
   const displayTitle = (meta.title && meta.title.trim()) ? meta.title.trim() : defaultTitle;
   titleGroup.appendChild(createEl("h2", { className: "quiz-print-title" }, displayTitle));
-  if (pref.fields?.topic !== false && meta.topic) {
-    titleGroup.appendChild(createEl("div", { className: "quiz-print-topic" }, `Argomento: ${meta.topic}`));
+  const subMeta = [];
+  if (pref.fields?.subject !== false && meta.subject) {
+    subMeta.push(`${t("quiz_subject_print_prefix")} ${meta.subject}`);
+  }
+  if (pref.fields?.topic !== false && meta.topic) subMeta.push(`Argomento: ${meta.topic}`);
+  if (subMeta.length > 0) {
+    titleGroup.appendChild(createEl("div", { className: "quiz-print-topic" }, subMeta.join(" • ")));
   }
   mainRow.appendChild(titleGroup);
 

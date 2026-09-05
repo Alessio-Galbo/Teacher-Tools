@@ -3,42 +3,63 @@ import { t } from "../../../i18n.js";
 import { showQuizPointsModal } from "./quizPointsModal.js";
 
 export function createMaxScoreBox(state, onPointsChange) {
-  const box = createEl("div", { className: "quiz-max-score-box" });
+  const box = createEl("div", { className: "quiz-score-row" });
   const maxScoreInp = createEl("input", {
     type: "number", className: "input-text quiz-max-score-input",
     min: "1", max: "100", value: state.maxScore || 10
   });
-  maxScoreInp.disabled = state.autoCalcPoints ?? false;
+  maxScoreInp.disabled = Boolean(state.autoCalcPoints);
   maxScoreInp.addEventListener("input", (e) => { state.maxScore = parseFloat(e.target.value) || 10; });
   box.appendChild(maxScoreInp);
 
-  const autoCheckWrap = createEl("label", { className: "quiz-auto-points-label" });
-  const autoCheck = createEl("input", { type: "checkbox", checked: state.autoCalcPoints ?? false });
+  const dualGroup = createEl("div", { className: "quiz-dual-btn-group" });
+
+  const toggleBtn = createEl("button", {
+    type: "button",
+    className: `btn btn-sm quiz-dual-toggle-btn ${state.autoCalcPoints ? "btn-primary" : "btn-secondary"}`
+  });
+
+  const updateToggleUI = () => {
+    const isAuto = Boolean(state.autoCalcPoints);
+    toggleBtn.className = `btn btn-sm quiz-dual-toggle-btn ${isAuto ? "btn-primary" : "btn-secondary"}`;
+    toggleBtn.textContent = isAuto ? `⚡ ${t("quiz_calc_auto_active")}` : `⚡ ${t("quiz_calc_points_auto")}`;
+    maxScoreInp.disabled = isAuto;
+  };
+
   const recalcAutoScore = () => {
-    if (autoCheck.checked) {
+    if (state.autoCalcPoints) {
       const curQ = state.variants[state.activeVariantIndex]?.questions || [];
       const sum = curQ.reduce((acc, q) => acc + (parseFloat(q.points) || 1), 0);
       state.maxScore = sum;
       maxScoreInp.value = sum;
     }
   };
-  autoCheck.addEventListener("change", () => {
-    state.autoCalcPoints = autoCheck.checked;
-    maxScoreInp.disabled = autoCheck.checked;
+
+  toggleBtn.addEventListener("click", () => {
+    state.autoCalcPoints = !state.autoCalcPoints;
+    updateToggleUI();
     recalcAutoScore();
   });
-  autoCheckWrap.appendChild(autoCheck);
-  autoCheckWrap.appendChild(createEl("span", { i18n: "quiz_calc_points_auto" }, t("quiz_calc_points_auto")));
-  box.appendChild(autoCheckWrap);
+  dualGroup.appendChild(toggleBtn);
 
-  const cfgWeightsBtn = createEl("button", {
-    type: "button", className: "btn btn-secondary btn-sm", i18n: "quiz_btn_weights"
-  }, t("quiz_btn_weights"));
-  cfgWeightsBtn.addEventListener("click", () => showQuizPointsModal(state, () => {
+  const cfgBtn = createEl("button", {
+    type: "button", className: "btn btn-secondary btn-sm quiz-dual-cfg-btn",
+    title: t("quiz_btn_weights")
+  }, "⚖️");
+  cfgBtn.addEventListener("click", () => showQuizPointsModal(state, () => {
     recalcAutoScore();
     if (onPointsChange) onPointsChange();
   }));
-  box.appendChild(cfgWeightsBtn);
+  dualGroup.appendChild(cfgBtn);
 
-  return { box, maxScoreInp, autoCheck, recalcAutoScore };
+  box.appendChild(dualGroup);
+
+  const syncAutoState = () => {
+    updateToggleUI();
+    recalcAutoScore();
+  };
+
+  updateToggleUI();
+
+  return { box, maxScoreInp, syncAutoState, recalcAutoScore };
 }
