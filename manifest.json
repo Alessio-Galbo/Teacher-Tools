@@ -1,6 +1,6 @@
 {
   "name": "Teacher Tools",
-  "short_name": "TeacherTools",
+  "short_name": "Teacher Tools",
   "description": "Supporto Didattico & PEI Liceo per Docenti di Sostegno",
   "id": "./index.html",
   "start_url": "./index.html",

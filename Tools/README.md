@@ -27,3 +27,15 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
 * **Come utilizzarlo:**
   - Fare doppio clic sul file `Avvia_Teacher_Tools.bat` presente nella root del progetto.
 
+---
+
+## 3. `generate_og_image.py`
+* **Scopo:** Generazione del banner grafico Open Graph (1200x630 px) ottimizzato per le anteprime dei link social (WhatsApp, Telegram, Facebook, Twitter, iMessage).
+* **Cosa fa:**
+  1. Compone lo sfondo a gradiente scuro con badge di stato e logo dell'applicazione.
+  2. Esporta un'immagine compressa (`assets/og-image.png`) sotto gli 80 KB per rispettare i limiti severi del crawler di WhatsApp (< 300 KB).
+* **Come eseguirlo:**
+  ```powershell
+  python Tools/generate_og_image.py
+  ```
+
