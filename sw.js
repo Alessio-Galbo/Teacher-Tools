@@ -1,4 +1,4 @@
-const CACHE_NAME = "teachertools-v43";
+const CACHE_NAME = "teachertools-v44";
 const CSS = ["variables", "base", "layout", "components/nav", "components/cards", "components/forms", "components/modal", "components/toast", "components/pei", "components/dossier", "components/dossierPrint", "components/notes", "components/studentBar", "components/school", "components/tree", "components/overview", "components/rollover", "components/headerYear", "components/tools", "components/quiz", "components/quizPrint", "components/settings"].map((c) => `./css/${c}.css`);
 
 const JS = [
@@ -20,7 +20,7 @@ const JS = [
 const CORE_ASSETS = [
   "./", "./index.html", "./manifest.json", "./favicon.ico",
   "./locales/it.json", "./locales/en.json",
-  "./assets/icon-192.png", "./assets/icon-512.png", "./assets/apple-touch-icon.png", "./assets/og-image.png",
+  "./assets/icon-192.png", "./assets/icon-512.png", "./assets/apple-touch-icon.png",
   ...CSS, ...JS
 ];
 
