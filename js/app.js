@@ -46,6 +46,7 @@ async function bootstrap() {
 
   initHeaderYearSelector(document.getElementById("header-year-container"));
   initStudentBar(document.getElementById("student-bar-container"));
+  import("./modules/info/updateNotifier.js").then((m) => m.checkAppUpdate());
 
   document.getElementById("tab-bar").addEventListener("click", (e) => {
     const btn = e.target.closest(".tab-btn");

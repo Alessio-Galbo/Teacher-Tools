@@ -1,67 +1,19 @@
-.settings-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-.settings-status-badge {
-  white-space: nowrap;
-  flex-shrink: 0;
-  font-size: 0.78rem;
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-}
-
-.settings-backup-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.settings-teacher-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.settings-teacher-card .btn-block {
-  margin-top: 12px;
-}
-
-.pwa-install-actions {
-  margin-top: 12px;
-  width: 100%;
-}
-
-.pwa-install-actions .btn {
-  width: 100%;
-  box-sizing: border-box;
-  justify-content: center;
-  text-align: center;
-  white-space: normal;
-}
-
-.info-section-card, .info-support-card {
-  margin-bottom: 12px;
-  padding: 12px 14px;
-}
-
-.info-meta-header {
-  margin-bottom: 14px;
-}
+.settings-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.settings-status-badge { white-space: nowrap; flex-shrink: 0; font-size: 0.78rem; padding: 3px 8px; border-radius: var(--radius-sm); }
+.settings-backup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.settings-teacher-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.settings-teacher-card .btn-block { margin-top: 12px; }
+.pwa-install-actions { margin-top: 12px; width: 100%; }
+.pwa-install-actions .btn { width: 100%; box-sizing: border-box; justify-content: center; text-align: center; white-space: normal; }
+.info-section-card, .info-support-card { margin-bottom: 12px; padding: 12px 14px; }
+.info-meta-header { margin-bottom: 14px; }
+.info-version-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.info-changelog-pill-btn { padding: 3px 8px; font-size: 0.78rem; line-height: 1.4; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 4px; }
+.changelog-list { padding-left: 20px; margin: 10px 0 4px 0; font-size: 0.88rem; line-height: 1.5; color: var(--color-text-secondary); }
+.changelog-list li { margin-bottom: 6px; }
 
 @media (max-width: 640px) {
-  .settings-backup-grid {
-    grid-template-columns: 1fr;
-  }
-  .settings-teacher-grid {
-    grid-template-columns: 1fr;
-  }
-  .settings-card-header {
-    align-items: flex-start;
-  }
+  .settings-backup-grid { grid-template-columns: 1fr; }
+  .settings-teacher-grid { grid-template-columns: 1fr; }
+  .settings-card-header { align-items: flex-start; }
 }

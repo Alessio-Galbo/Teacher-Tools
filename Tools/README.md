@@ -27,3 +27,13 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
 * **Come utilizzarlo:**
   - Fare doppio clic sul file `Avvia_Teacher_Tools.bat` presente nella root del progetto.
 
+---
+
+## 3. `RELEASE_WORKFLOW.md`
+* **Scopo:** Guida procedurale e architettura per il rilascio di nuove versioni e la gestione del changelog in-app.
+* **Cosa descrive:**
+  1. **Fonte Unica della Versione:** Come aggiornare `CURRENT_APP_VERSION` e `CHANGELOG_HISTORY` in `js/modules/info/changelogData.js`.
+  2. **Zero-Hardcoding:** Registrazione delle chiavi descrittive in `locales/it.json` e `locales/en.json`.
+  3. **Aggiornamento Cache PWA:** Incremento del numero di versione cache in `sw.js`.
+  4. **Procedura di Rilascio Git & GitHub:** I comandi standard per tagging e pubblicazione note di rilascio.
+* **Consulta la guida completa:** [RELEASE_WORKFLOW.md](RELEASE_WORKFLOW.md).
