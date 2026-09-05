@@ -60,13 +60,8 @@ export function renderSchoolView(container) {
     const nextYearStudents = await getStudents(getNextSchoolYear(config.activeYear));
 
     if (schools.length === 0) {
-      const emptyBtn = createEl("button", {
-        className: "btn btn-primary", i18n: "school_btn_add_school",
-        onClick: () => showSchoolModal({ onSaved: () => { if (refreshViewFn) refreshViewFn(); } }),
-      });
       return [createEl("div", { className: "card empty-card" }, [
         createEl("p", { className: "text-muted", i18n: "school_no_schools_in_year" }),
-        createEl("div", { className: "form-group" }, [emptyBtn]),
       ])];
     }
 
