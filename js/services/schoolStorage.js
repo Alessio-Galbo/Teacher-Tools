@@ -2,13 +2,7 @@ import { getAll, putItem, deleteItem } from "./db.js";
 import { getSchoolConfig } from "./schoolConfigService.js";
 
 export async function getAllSchoolsRaw() {
-  let list = await getAll("schools");
-  if (list.length === 0) {
-    const config = await getSchoolConfig();
-    const def = { id: "sch_1", name: "Liceo Statale Galilei", city: "Bergamo", years: [config.activeYear], createdAt: new Date().toISOString() };
-    await putItem("schools", def);
-    list = [def];
-  }
+  const list = await getAll("schools");
   return list.map((s) => ({ ...s, years: Array.isArray(s.years) ? s.years : [s.year || "2024/2025"] }));
 }
 

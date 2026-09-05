@@ -1,18 +1,20 @@
+import { getAll } from "./db.js";
 import { getSchoolConfig } from "./schoolConfigService.js";
 import { getAllSchoolsRaw, getSchools, getHistoricSchools, saveSchoolDb, deleteSchoolDb } from "./schoolStorage.js";
+import { removeClassAndCleanup } from "./classCleanupService.js";
 
 export { getClasses, addClass, removeClass, rolloverClass } from "./classService.js";
 export { getSchoolConfig, updateSchoolConfig, addAcademicYear, removeAcademicYear } from "./schoolConfigService.js";
 export { getSchools, getHistoricSchools } from "./schoolStorage.js";
 
-let activeSchoolId = localStorage.getItem("teacher_tools_active_school") || "sch_1";
+let activeSchoolId = localStorage.getItem("teacher_tools_active_school") || "";
 
 export function getActiveSchoolId() { return activeSchoolId; }
 
 export function setActiveSchool(id) {
-  activeSchoolId = id;
-  localStorage.setItem("teacher_tools_active_school", id || "");
-  window.dispatchEvent(new CustomEvent("activeSchoolChanged", { detail: id }));
+  activeSchoolId = id || "";
+  localStorage.setItem("teacher_tools_active_school", activeSchoolId);
+  window.dispatchEvent(new CustomEvent("activeSchoolChanged", { detail: activeSchoolId }));
 }
 
 export async function getActiveSchool(year = null) {
@@ -60,10 +62,17 @@ export async function removeSchoolFromYear(schoolId, year = null) {
   const sch = all.find((s) => s.id === schoolId);
   if (!sch) return;
   sch.years = sch.years.filter((y) => y !== yr);
-  if (sch.years.length === 0) await deleteSchoolDb(schoolId);
-  else await saveSchoolDb(sch);
+  if (sch.years.length === 0) {
+    await deleteSchoolDb(schoolId);
+    const classes = await getAll("classes");
+    for (const c of classes) {
+      if (c.schoolId === schoolId) await removeClassAndCleanup(c.id);
+    }
+  } else {
+    await saveSchoolDb(sch);
+  }
   const remaining = await getSchools(yr);
-  setActiveSchool(remaining[0]?.id || null);
+  setActiveSchool(remaining[0]?.id || "");
   window.dispatchEvent(new CustomEvent("schoolsListChanged"));
 }
 

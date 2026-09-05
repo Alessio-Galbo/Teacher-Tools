@@ -3,16 +3,7 @@ import { getAll, putItem, deleteItem } from "./db.js";
 let activeStudentId = localStorage.getItem("teacher_tools_active_student") || "";
 
 export async function getStudents(schoolYear = null) {
-  let list = await getAll("students");
-  if (list.length === 0) {
-    const defaults = [
-      { id: "stud_1", personId: "p_stud_1", name: "Studente L.", className: "3°A", schoolYear: "2024/2025", supportType: "pei", isPinned: true, createdAt: new Date().toISOString() },
-      { id: "stud_2", personId: "p_stud_2", name: "Studente M.", className: "4°B", schoolYear: "2024/2025", supportType: "pei", isPinned: false, createdAt: new Date().toISOString() },
-    ];
-    for (const s of defaults) await putItem("students", s);
-    if (!activeStudentId) setActiveStudent("stud_1");
-    list = defaults;
-  }
+  const list = await getAll("students");
   const filtered = schoolYear ? list.filter((s) => !s.schoolYear || s.schoolYear === schoolYear) : list;
   return filtered.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0) || a.name.localeCompare(b.name));
 }

@@ -18,12 +18,16 @@ export function createPwaInstallCard(onRefresh) {
   body.appendChild(createEl("p", { className: "card-desc", i18n: "pwa_desc" }, t("pwa_desc")));
 
   const actions = createEl("div", { className: "settings-actions pwa-install-actions" });
+  const btnKey = standalone ? "pwa_already_installed" : "pwa_btn_install";
   const btn = createEl("button", {
-    className: "btn btn-primary btn-block",
-    i18n: "pwa_btn_install"
-  }, t("pwa_btn_install"));
+    className: standalone ? "btn btn-secondary btn-block" : "btn btn-primary btn-block",
+    i18n: btnKey,
+    disabled: standalone
+  }, t(btnKey));
 
-  btn.addEventListener("click", () => promptPwaInstall());
+  if (!standalone) {
+    btn.addEventListener("click", () => promptPwaInstall());
+  }
   actions.appendChild(btn);
   body.appendChild(actions);
 

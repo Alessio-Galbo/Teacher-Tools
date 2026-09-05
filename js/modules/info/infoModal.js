@@ -45,15 +45,13 @@ export function showInfoModal() {
 
   body.appendChild(createEl("p", { className: "text-muted text-center", i18n: "info_license" }, t("info_license")));
 
-  const footer = createEl("div", { className: "modal-footer quiz-modal-footer-centered" });
-  const okBtn = createEl("button", { className: "btn btn-secondary", i18n: "btn_cancel" }, t("btn_cancel"));
   const closeModal = () => { overlay.classList.remove("active"); clearEl(overlay); };
   closeBtn.addEventListener("click", closeModal);
-  okBtn.addEventListener("click", closeModal);
-  footer.appendChild(okBtn);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeModal();
+  });
 
   modal.appendChild(body);
-  modal.appendChild(footer);
   overlay.appendChild(modal);
   overlay.classList.add("active");
 }

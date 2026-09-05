@@ -3,15 +3,7 @@ import { getSchoolConfig, getActiveSchoolId } from "./schoolService.js";
 import { removeClassAndCleanup } from "./classCleanupService.js";
 
 export async function getClasses(year = null, schoolId = null) {
-  let classes = await getAll("classes");
-  if (classes.length === 0) {
-    const defaults = [
-      { id: "cls_3A", name: "3°A", schoolId: "sch_1", schoolYear: "2024/2025", createdAt: new Date().toISOString() },
-      { id: "cls_4B", name: "4°B", schoolId: "sch_1", schoolYear: "2024/2025", createdAt: new Date().toISOString() },
-    ];
-    for (const c of defaults) await putItem("classes", c);
-    classes = defaults;
-  }
+  const classes = await getAll("classes");
   let res = classes;
   if (year) res = res.filter((c) => c.schoolYear === year);
   if (schoolId) res = res.filter((c) => !c.schoolId || c.schoolId === schoolId);
