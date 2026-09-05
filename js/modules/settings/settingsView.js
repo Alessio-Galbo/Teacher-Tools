@@ -3,6 +3,7 @@ import { setLanguage, getLanguage } from "../../i18n.js";
 import { createBackupSection } from "./backupSection.js";
 import { createCloudCard } from "./cloudSection.js";
 import { createTeacherProfileCard } from "./teacherProfileCard.js";
+import { createPwaInstallCard } from "./pwaInstallCard.js";
 
 export function renderSettingsView(container) {
   clearEl(container);
@@ -11,6 +12,7 @@ export function renderSettingsView(container) {
   ]);
   const refresh = () => renderSettingsView(container);
   container.appendChild(header);
+  container.appendChild(createPwaInstallCard(refresh));
   container.appendChild(createTeacherProfileCard(refresh));
   container.appendChild(createCloudCard(refresh));
   container.appendChild(createBackupSection());

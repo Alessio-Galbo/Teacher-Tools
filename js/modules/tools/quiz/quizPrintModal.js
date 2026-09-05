@@ -54,7 +54,11 @@ export async function showQuizPrintModal(meta, variantName, questions, initialSc
 
   const renderSheets = () => {
     clearEl(body);
-    const vars = (curPref.scope === "all" && meta.variants?.length > 1) ? meta.variants : [{ name: variantName, questions }];
+    const isAll = curPref.scope === "all" && meta.variants?.length > 1;
+    printBtn.textContent = isAll
+      ? `🖨️ ${t("quiz_print_all_btn")} (${meta.variants.length})`
+      : `📄 ${t("quiz_print_btn")}`;
+    const vars = isAll ? meta.variants : [{ name: variantName, questions }];
     vars.forEach((v, idx) => {
       body.appendChild(renderPrintSheet(fullMeta, v.name, v.questions, curPref, idx < vars.length - 1));
     });

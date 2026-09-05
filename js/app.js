@@ -8,6 +8,7 @@ import { renderSchoolView } from "./modules/school/schoolView.js";
 import { renderToolsView } from "./modules/tools/toolsView.js";
 import { renderSettingsView } from "./modules/settings/settingsView.js";
 import { showSettingsModal } from "./modules/settings/settingsModal.js";
+import { initPwaInstall } from "./services/pwaInstallService.js";
 
 let currentTab = "view-pei";
 
@@ -39,6 +40,7 @@ async function bootstrap() {
   const savedTheme = localStorage.getItem("teacher_tools_theme") || "light";
   document.documentElement.setAttribute("data-theme", savedTheme);
 
+  initPwaInstall();
   await initI18n();
   await openDB();
 

@@ -27,18 +27,23 @@ export async function renderQuizView(container) {
   const variantsMount = createEl("div");
   container.appendChild(variantsMount);
 
-  const toolbarCard = createQuizToolbar(state, (q) => {
-    state.variants[state.activeVariantIndex].questions.push(q);
-    renderList();
-    headerCard.recalcAutoScore();
-  });
-  container.appendChild(toolbarCard);
+  const toolbarMount = createEl("div");
+  container.appendChild(toolbarMount);
 
   const listContainer = createEl("div", { className: "quiz-list-container" });
   container.appendChild(listContainer);
 
+  const renderToolbar = () => {
+    clearEl(toolbarMount);
+    toolbarMount.appendChild(createQuizToolbar(state, (q) => {
+      state.variants[state.activeVariantIndex].questions.push(q);
+      renderList(); headerCard.recalcAutoScore();
+    }));
+  };
+
   const renderVariants = () => {
     clearEl(variantsMount);
+    renderToolbar();
     variantsMount.appendChild(createVariantsBar(state, () => {
       renderVariants(); renderList(); headerCard.recalcAutoScore();
     }, () => {
@@ -52,18 +57,6 @@ export async function renderQuizView(container) {
     renderList(); headerCard.recalcAutoScore();
   }, () => headerCard.recalcAutoScore());
 
-  const syncHeaderInputs = () => {
-    if (headerCard.titleInp) headerCard.titleInp.value = state.title;
-    if (headerCard.topicInp) headerCard.topicInp.value = state.topic;
-    if (headerCard.subjInp) headerCard.subjInp.value = state.subject;
-    if (headerCard.maxScoreInp) {
-      headerCard.maxScoreInp.value = state.maxScore;
-      headerCard.maxScoreInp.disabled = state.autoCalcPoints;
-    }
-    if (headerCard.autoCheck) headerCard.autoCheck.checked = state.autoCalcPoints;
-    headerCard.renderStatus();
-  };
-
   const loadQuiz = (q) => {
     state.id = q.id; state.title = q.title || ""; state.topic = q.topic || "";
     state.subject = q.subject || ""; state.maxScore = q.maxScore || 10;
@@ -71,7 +64,7 @@ export async function renderQuizView(container) {
     state.defaultPoints = q.defaultPoints || { multiple_choice: 1, true_false: 0.5, cloze: 1, open: 2 };
     state.variants = q.variants?.length ? q.variants : [{ id: "var_a", name: "Variante A", questions: [] }];
     state.activeVariantIndex = 0;
-    syncHeaderInputs(); headerCard.recalcAutoScore(); renderVariants(); renderList();
+    headerCard.syncInputs(); headerCard.recalcAutoScore(); renderVariants(); renderList();
   };
 
   const resetQuiz = () => {
@@ -79,7 +72,7 @@ export async function renderQuizView(container) {
     state.autoCalcPoints = false;
     state.variants = [{ id: "var_a", name: "Variante A", questions: [] }];
     state.activeVariantIndex = 0;
-    syncHeaderInputs(); renderVariants(); renderList();
+    headerCard.syncInputs(); renderVariants(); renderList();
   };
 
   renderVariants(); renderList();

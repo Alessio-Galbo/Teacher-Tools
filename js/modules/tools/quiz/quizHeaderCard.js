@@ -68,6 +68,18 @@ export function createQuizHeaderCard(state, academicYear, onLoad, onReset, onPoi
   grid.appendChild(makeField("quiz_max_score_label", scoreBox));
   metaCard.appendChild(grid);
 
+  const syncInputs = () => {
+    titleInp.value = state.title || "";
+    subjInp.value = state.subject || "";
+    topicInp.value = state.topic || "";
+    if (maxScoreInp) {
+      maxScoreInp.value = state.maxScore;
+      maxScoreInp.disabled = state.autoCalcPoints;
+    }
+    if (autoCheck) autoCheck.checked = state.autoCalcPoints;
+    renderStatus();
+  };
+
   renderStatus();
-  return { metaCard, titleInp, subjInp, topicInp, maxScoreInp, autoCheck, recalcAutoScore, renderStatus };
+  return { metaCard, recalcAutoScore, syncInputs };
 }

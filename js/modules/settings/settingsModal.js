@@ -4,6 +4,7 @@ import { createBackupSection } from "./backupSection.js";
 import { createCloudCard } from "./cloudSection.js";
 import { createThemeCard, createLanguageCard } from "./settingsView.js";
 import { createTeacherProfileCard } from "./teacherProfileCard.js";
+import { createPwaInstallCard } from "./pwaInstallCard.js";
 
 export function showSettingsModal() {
   const overlay = document.getElementById("modal-container");
@@ -20,6 +21,7 @@ export function showSettingsModal() {
   const body = createEl("div", { className: "modal-body" });
   const refreshModal = () => {
     clearEl(body);
+    body.appendChild(createPwaInstallCard(refreshModal));
     body.appendChild(createTeacherProfileCard(refreshModal));
     body.appendChild(createCloudCard(refreshModal));
     body.appendChild(createBackupSection());

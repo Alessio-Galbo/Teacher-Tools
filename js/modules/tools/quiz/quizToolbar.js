@@ -26,20 +26,28 @@ export function createQuizToolbar(state, onAddQuestion) {
     navigator.clipboard.writeText(formatQuizAsText(state, cur.questions)).then(() => showToast("quiz_copied"));
   });
 
-  const printBtn = createEl("button", { className: "btn btn-primary btn-sm", i18n: "quiz_print_btn" }, t("quiz_print_btn"));
+  const cur = state.variants[state.activeVariantIndex] || state.variants[0];
+  const hasMultiple = state.variants.length > 1;
+
+  const printLabel = hasMultiple
+    ? `📄 ${t("quiz_print_btn")} (${cur?.name || "A"})`
+    : `📄 ${t("quiz_print_btn")}`;
+  const printBtn = createEl("button", {
+    className: `btn ${hasMultiple ? "btn-secondary" : "btn-primary"} btn-sm`
+  }, printLabel);
   printBtn.addEventListener("click", () => {
-    const cur = state.variants[state.activeVariantIndex];
-    showQuizPrintModal(state, cur.name, cur.questions, "current");
+    showQuizPrintModal(state, cur?.name, cur?.questions, "current");
   });
 
   actGroup.appendChild(copyBtn);
   actGroup.appendChild(printBtn);
 
-  if (state.variants.length > 1) {
-    const printAllBtn = createEl("button", { className: "btn btn-secondary btn-sm", i18n: "quiz_print_all_btn" }, t("quiz_print_all_btn"));
+  if (hasMultiple) {
+    const printAllBtn = createEl("button", {
+      className: "btn btn-primary btn-sm"
+    }, `🖨️ ${t("quiz_print_all_btn")} (${state.variants.length})`);
     printAllBtn.addEventListener("click", () => {
-      const cur = state.variants[state.activeVariantIndex];
-      showQuizPrintModal(state, cur.name, cur.questions, "all");
+      showQuizPrintModal(state, cur?.name, cur?.questions, "all");
     });
     actGroup.appendChild(printAllBtn);
   }

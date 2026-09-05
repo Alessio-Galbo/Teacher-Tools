@@ -17,11 +17,13 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
 ---
 
 ## 2. `server.py` & `Avvia_Teacher_Tools.bat`
-* **Scopo:** Avvio rapido dell'applicazione in locale con un solo doppio clic, senza necessità di aprire il terminale o digitare comandi.
+* **Scopo:** Avvio rapido dell'applicazione in locale sia per uso su PC che per accesso diretto da smartphone connesso via Wi-Fi o Hotspot.
 * **Cosa fa:**
-  1. Rileva una porta libera disponibile (a partire dalla 8000).
-  2. Apre automaticamente la finestra del browser predefinito all'indirizzo `http://localhost:<porta>`.
-  3. Mantiene attivo il server web locale fino alla chiusura della finestra.
+  1. Rileva una porta libera disponibile (a partire dalla 8000) e si aggancia a tutte le interfacce di rete (`0.0.0.0`).
+  2. Rileva l'indirizzo IP LAN / Hotspot del computer e stampa il link diretto per smartphone (`http://<ip>:<porta>`).
+  3. Genera e mostra direttamente nel terminale un **Codice QR scansionabile** con la fotocamera del telefono per l'accesso istantaneo senza digitare l'IP.
+  4. Apre automaticamente la finestra del browser del PC su `http://localhost:<porta>`.
+  5. Mantiene attivo il server web locale fino alla chiusura della finestra.
 * **Come utilizzarlo:**
   - Fare doppio clic sul file `Avvia_Teacher_Tools.bat` presente nella root del progetto.
 
