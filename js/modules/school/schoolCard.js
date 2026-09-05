@@ -4,6 +4,7 @@ import { showSchoolModal } from "./schoolModal.js";
 import { showSchoolOverviewModal } from "./schoolOverviewModal.js";
 import { removeSchoolFromYear, addClass } from "../../services/schoolService.js";
 import { createClassTreeNode } from "./classTreeNode.js";
+import { formatSchoolLocation } from "./schoolLocationHelper.js";
 
 export function createSchoolCard(school, classes, students, config, onRefresh, allClasses = [], nextYearStudents = []) {
   const schClasses = classes.filter((c) => !c.schoolId || c.schoolId === school.id);
@@ -41,11 +42,15 @@ export function createSchoolCard(school, classes, students, config, onRefresh, a
     },
   }, "🗑");
 
-  const titleEl = createEl("h3", {
-    className: "card-title card-title-clickable",
+  const loc = formatSchoolLocation(school);
+  const titleChildren = [createEl("h3", { className: "card-title" }, `🏫 ${school.name}`)];
+  if (loc) titleChildren.push(createEl("span", { className: "school-card-location" }, `📍 ${loc}`));
+
+  const titleEl = createEl("div", {
+    className: "school-title-group card-title-clickable",
     title: school.name,
     onClick: () => showSchoolOverviewModal(school.id, config.activeYear),
-  }, `🏫 ${school.name}${school.city ? ` (${school.city})` : ""}`);
+  }, titleChildren);
 
   const header = createEl("div", { className: "card-header" }, [
     titleEl,

@@ -1,59 +1,58 @@
 .tree-container { padding: 4px 0; }
-.tree-node { margin-bottom: 6px; }
+.tree-node { margin-bottom: 4px; }
+.tree-children { margin-top: 4px; }
+.tree-children.collapsed { display: none; }
 .tree-row {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  padding: 6px 10px; min-height: 40px; background-color: var(--color-surface);
-  border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+  padding: 5px 8px; min-height: 36px; background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm);
   box-sizing: border-box; transition: background-color var(--transition-fast);
 }
 .tree-row:hover { background-color: var(--color-surface-hover); }
-.tree-row-content {
-  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
-  overflow: hidden; cursor: pointer;
-}
-.tree-label-group {
-  display: flex; flex-direction: column; justify-content: center;
-  gap: 2px; min-width: 0; flex: 1; overflow: hidden;
-}
-.tree-label-group .card-title {
-  font-size: 0.84rem; font-weight: 600; white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis; line-height: 1.25;
-}
+.tree-level-1 { padding-left: 14px; background-color: var(--color-surface-hover); }
+.tree-level-2 { padding-left: 28px; background-color: var(--color-surface); }
+.tree-row-content { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; overflow: hidden; cursor: pointer; }
+.tree-label-group { display: flex; flex-direction: row; align-items: center; gap: 6px; min-width: 0; flex: 1; overflow: hidden; flex-wrap: wrap; }
+.tree-label-group .card-title { font-size: 0.86rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; }
 .tree-label-group.clickable:hover .card-title { color: var(--color-primary); text-decoration: underline; }
-.tree-badges-row {
-  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-}
-.tree-badges-row .badge {
-  font-size: 0.68rem; padding: 1px 6px; line-height: 1.2; flex-shrink: 0;
-}
-.tree-toggle {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 18px; height: 18px; font-size: 0.7rem; color: var(--color-text-secondary); flex-shrink: 0;
-}
-.tree-children {
-  margin-left: 12px; padding-left: 8px; border-left: 2px solid var(--color-border-subtle); margin-top: 4px;
-}
-.tree-children.collapsed { display: none; }
-.tree-actions {
-  display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; margin-left: auto;
-}
+.tree-badges-row { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.tree-badges-row .badge { font-size: 0.66rem; padding: 1px 6px; line-height: 1.2; flex-shrink: 0; }
+.tree-toggle { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; font-size: 0.68rem; color: var(--color-text-secondary); flex-shrink: 0; }
+
+.tree-actions { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; margin-left: auto; }
 .tree-actions .btn, .tree-actions .note-delete-btn {
-  height: 28px; min-height: 28px; padding: 0 8px; font-size: 0.78rem;
-  line-height: 1; border-radius: var(--radius-sm); white-space: nowrap;
+  height: 28px; min-height: 28px; padding: 0 8px; font-size: 0.8rem;
+  line-height: 1; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center;
+  white-space: nowrap; flex-shrink: 0;
 }
-.tree-actions .btn-icon-only {
-  width: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center;
-}
+.tree-actions .btn-icon-only,
+.tree-actions .note-delete-btn { min-width: 28px; width: auto; padding: 0 4px; }
 .btn-pin {
   background: none; border: none; font-size: 0.95rem; cursor: pointer; opacity: 0.35;
-  width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
-  padding: 0; transition: opacity var(--transition-fast);
+  width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; transition: opacity var(--transition-fast);
 }
 .btn-pin.pinned { opacity: 1; filter: drop-shadow(0 0 2px var(--color-primary)); }
-.tree-actions .btn .btn-label { margin-left: 4px; }
+.tree-actions .btn .btn-label { margin-left: 4px; white-space: nowrap; }
+
+.school-card .card-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--color-border-subtle);
+}
+.school-card .card-header .card-title { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 0; }
+
 @media (max-width: 560px) {
   .tree-actions .btn .btn-label { display: none; }
-  .tree-row { padding: 5px 8px; gap: 6px; }
+  .tree-row { padding: 4px 6px; min-height: 32px; gap: 4px; }
+  .tree-level-1 { padding-left: 10px; }
+  .tree-level-2 { padding-left: 20px; }
+  .tree-label-group .card-title { font-size: 0.8rem; }
+  .tree-badges-row .badge { font-size: 0.62rem; padding: 1px 4px; }
   .tree-actions { gap: 3px; }
+  .tree-actions .btn, .tree-actions .note-delete-btn {
+    height: 26px; min-height: 26px; font-size: 0.74rem; padding: 0 6px; white-space: nowrap;
+  }
+  .tree-actions .btn-icon-only, .tree-actions .note-delete-btn, .btn-pin {
+    width: 26px; min-width: 26px; padding: 0;
+  }
+  .school-card { padding: 10px 12px; margin-bottom: 10px; }
 }
-

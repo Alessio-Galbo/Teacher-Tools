@@ -72,9 +72,6 @@ export async function showPeiConfigModal(onSaved) {
       createEl("button", { className: "modal-close-btn", onClick: closeModal }, "✕"),
     ]),
     bodyEl,
-    createEl("div", { className: "modal-toolbar" }, [
-      createEl("button", { className: "btn btn-primary", i18n: "btn_close", onClick: closeModal }),
-    ]),
   ]);
 
   overlay.appendChild(modalBox);

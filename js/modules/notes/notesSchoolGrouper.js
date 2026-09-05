@@ -1,4 +1,5 @@
 import { t } from "../../i18n.js";
+import { formatSchoolFullName } from "../school/schoolLocationHelper.js";
 
 function buildSchoolSubgroups(sch, notes, handled, { classes, students }) {
   const schName = sch.name.toLowerCase();
@@ -37,7 +38,7 @@ export function groupAllSchoolsNotes(notes, { schools = [], classes = [], studen
     const subgroups = buildSchoolSubgroups(sch, notes, handled, { classes, students });
     if (subgroups.length > 0) {
       const total = subgroups.reduce((sum, s) => sum + s.notes.length, 0);
-      macroGroups.push({ isMacro: true, icon: "🏫", title: `${sch.name}${sch.city ? ` (${sch.city})` : ""}`, count: total, subgroups });
+      macroGroups.push({ isMacro: true, icon: "🏫", title: formatSchoolFullName(sch), count: total, subgroups });
     }
   });
 

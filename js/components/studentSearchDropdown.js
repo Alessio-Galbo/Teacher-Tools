@@ -2,6 +2,7 @@ import { createEl } from "../utils/dom.js";
 import { t } from "../i18n.js";
 import { buildDropdownItems } from "./studentDropdownItems.js";
 import { showStudentModal } from "../modules/school/studentModal.js";
+import { formatSchoolFullName } from "../modules/school/schoolLocationHelper.js";
 
 export function createStudentSearchDropdown(data, activeId, onSelect) {
   const { schools, students } = data;
@@ -11,7 +12,7 @@ export function createStudentSearchDropdown(data, activeId, onSelect) {
     if (activeId === "__ALL__" || !activeId) return `📅 ${t("student_all")}`;
     if (activeId.startsWith("school_")) {
       const s = schools.find((x) => `school_${x.id}` === activeId);
-      return s ? `🏫 ${s.name}` : `🏫 Scuola`;
+      return s ? `🏫 ${formatSchoolFullName(s)}` : `🏫 Scuola`;
     }
     if (activeId.startsWith("class_")) return `🏢 Classe ${activeId.replace("class_", "")}`;
     const st = students.find((x) => x.id === activeId);

@@ -3,9 +3,9 @@ import { t } from "../../i18n.js";
 import { peiDimensions } from "./peiData.js";
 
 export function renderConfigControls({ activeDimId, activeSection, onDimChange, onSectionChange }) {
-  const dimTabs = createEl("div", { className: "overview-year-nav" },
+  const dimTabs = createEl("div", { className: "pei-config-dim-grid" },
     peiDimensions.map((d) => createEl("button", {
-      className: `overview-year-btn ${d.id === activeDimId ? "active" : ""}`,
+      className: `pei-config-dim-btn ${d.id === activeDimId ? "active" : ""}`,
       i18n: d.nameKey,
       onClick: () => onDimChange(d.id),
     }))

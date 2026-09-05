@@ -1,6 +1,6 @@
 import { createEl } from "../../utils/dom.js";
 
-export function createYearFilterBar(activeYear, currentMode, onModeChange) {
+export function createYearButtons(activeYear, currentMode, onModeChange) {
   const currentBtn = createEl("button", {
     className: `btn btn-sm ${currentMode === "current" ? "btn-primary" : "btn-secondary"}`,
     onClick: () => onModeChange("current"),
@@ -14,5 +14,5 @@ export function createYearFilterBar(activeYear, currentMode, onModeChange) {
     onClick: () => onModeChange("all"),
   });
 
-  return createEl("div", { className: "notes-year-filter tags-bar" }, [currentBtn, allBtn]);
+  return [currentBtn, allBtn];
 }

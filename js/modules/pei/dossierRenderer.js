@@ -2,18 +2,38 @@ import { createEl } from "../../utils/dom.js";
 import { t } from "../../i18n.js";
 import { peiDimensions, getDimensionById } from "./peiData.js";
 
-export function renderDossierDOM(selections = {}, studentName = "", effectiveDims = {}) {
-  const container = createEl("div", { className: "dossier-paper" });
+const TYPE_MAP = {
+  secondaria_2: "pei_school_type_sec2",
+  secondaria_1: "pei_school_type_sec1",
+  primaria: "pei_school_type_prim",
+  infanzia: "pei_school_type_inf",
+  custom: "pei_school_type_custom",
+};
 
-  const badges = [createEl("span", { className: "badge" }, `Data: ${new Date().toLocaleDateString()}`)];
-  if (studentName) {
-    badges.unshift(createEl("span", { className: "badge badge-primary" }, `Studente: ${studentName}`));
-  }
+export function renderDossierDOM(data = {}, legacyStudent = "", legacyDims = {}) {
+  const isObj = data && typeof data === "object" && !Array.isArray(data) && ("selections" in data || "schoolType" in data);
+  const selections = isObj ? (data.selections || {}) : data;
+  const studentName = isObj ? (data.studentName || "") : legacyStudent;
+  const effectiveDims = isObj ? (data.effectiveDims || {}) : legacyDims;
+  const schoolName = isObj ? (data.schoolName || "") : "";
+  const schoolType = isObj ? (data.schoolType || "secondaria_2") : "secondaria_2";
+  const activeYear = isObj ? (data.activeYear || "") : "";
+
+  const container = createEl("div", { className: "dossier-paper" });
+  const schoolTypeLabel = t(TYPE_MAP[schoolType] || "pei_school_type_sec2");
+
+  const metaGrid = createEl("div", { className: "dossier-meta-grid" }, [
+    createMetaItem("pei_dossier_lbl_school", schoolName || "—"),
+    createMetaItem("pei_dossier_lbl_year", activeYear || "—"),
+    createMetaItem("pei_dossier_lbl_student", studentName || "—"),
+    createMetaItem("pei_dossier_lbl_date", new Date().toLocaleDateString()),
+  ]);
 
   const headerBox = createEl("div", { className: "dossier-header-box" }, [
-    createEl("div", { className: "dossier-official-title" }, "PIANO EDUCATIVO INDIVIDUALIZZATO (PEI)"),
-    createEl("div", { className: "dossier-official-sub" }, "Scuola Secondaria di II Grado • Linee Guida D.I. 182/2020 e D.I. 153/2023"),
-    createEl("div", { className: "tags-bar" }, badges),
+    createEl("div", { className: "dossier-republic-heading", i18n: "pei_dossier_republic" }),
+    createEl("div", { className: "dossier-official-title", i18n: "pei_dossier_title" }),
+    createEl("div", { className: "dossier-official-sub" }, `${schoolTypeLabel} • ${t("pei_dossier_guidelines")}`),
+    metaGrid,
   ]);
   container.appendChild(headerBox);
 
@@ -26,9 +46,9 @@ export function renderDossierDOM(selections = {}, studentName = "", effectiveDim
 
     const card = createEl("div", { className: "dossier-dim-card" }, [
       createEl("div", { className: "dossier-dim-title" }, t(dim.nameKey)),
-      createField("Quadro Osservativo e Barriere", level.text),
-      createField("Obiettivi Educativo-Didattici", goal.text),
-      createField("Strategie, Mediatori e Criteri di Verifica", strategy.text),
+      createField("pei_dim_quadro", level.text),
+      createField("pei_dim_obiettivi", goal.text),
+      createField("pei_dim_strategie", strategy.text),
     ]);
     container.appendChild(card);
   });
@@ -36,9 +56,16 @@ export function renderDossierDOM(selections = {}, studentName = "", effectiveDim
   return container;
 }
 
-function createField(label, text) {
+function createMetaItem(labelKey, valText) {
+  return createEl("div", { className: "dossier-meta-item" }, [
+    createEl("span", { className: "dossier-meta-lbl", i18n: labelKey }),
+    createEl("span", { className: "dossier-meta-val" }, valText),
+  ]);
+}
+
+function createField(labelKey, text) {
   return createEl("div", { className: "dossier-field" }, [
-    createEl("div", { className: "dossier-label" }, label),
+    createEl("div", { className: "dossier-label", i18n: labelKey }),
     createEl("div", { className: "dossier-content" }, text),
   ]);
 }

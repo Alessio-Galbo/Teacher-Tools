@@ -5,6 +5,7 @@ import { getStudents } from "../../services/studentService.js";
 import { createTreeNode } from "./treeNode.js";
 import { createClassTreeNode } from "./classTreeNode.js";
 import { showSchoolOverviewModal } from "./schoolOverviewModal.js";
+import { formatSchoolFullName } from "./schoolLocationHelper.js";
 
 export function createSchoolTreeView(onRefresh) {
   const container = createEl("div", { className: "tree-container card" });
@@ -45,7 +46,7 @@ export function createSchoolTreeView(onRefresh) {
 
     const rootNode = createTreeNode({
       icon: "🏫",
-      title: `${school.name}${school.city ? ` (${school.city})` : ""}`,
+      title: formatSchoolFullName(school),
       badges: [createEl("span", { className: "badge badge-primary" }, config.activeYear)],
       children: classNodes,
       isCollapsible: false,

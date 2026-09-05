@@ -1,7 +1,7 @@
 import { createEl } from "../../utils/dom.js";
 
 export function createTreeNode(options = {}) {
-  const { icon = "📁", title = "", badges = [], actions = [], children = [], isCollapsible = true, isExpanded = true } = options;
+  const { icon = "📁", title = "", badges = [], actions = [], children = [], isCollapsible = true, isExpanded = true, level = 0 } = options;
 
   let expanded = isExpanded;
   const nodeEl = createEl("div", { className: "tree-node" });
@@ -41,7 +41,7 @@ export function createTreeNode(options = {}) {
   }
 
   const actionsEl = createEl("div", { className: "tree-actions" }, actions);
-  const rowEl = createEl("div", { className: "tree-row" }, [contentEl, actionsEl]);
+  const rowEl = createEl("div", { className: `tree-row tree-level-${level}` }, [contentEl, actionsEl]);
 
   nodeEl.appendChild(rowEl);
   if (children.length > 0) {

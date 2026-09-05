@@ -2,6 +2,7 @@ import { createEl } from "../../utils/dom.js";
 import { t } from "../../i18n.js";
 import { getSchools, getActiveSchool, setActiveSchool, removeSchoolFromYear, getSchoolConfig } from "../../services/schoolService.js";
 import { showSchoolModal } from "./schoolModal.js";
+import { formatSchoolFullName } from "./schoolLocationHelper.js";
 
 export function createSchoolConfigCard(onSchoolChanged) {
   const card = createEl("div", { className: "card" });
@@ -42,7 +43,7 @@ export function createSchoolConfigCard(onSchoolChanged) {
         if (onSchoolChanged) onSchoolChanged();
       },
     }, schools.map((s) =>
-      createEl("option", { value: s.id, selected: activeSchool && s.id === activeSchool.id }, `🏫 ${s.name}${s.city ? ` (${s.city})` : ""}`)
+      createEl("option", { value: s.id, selected: activeSchool && s.id === activeSchool.id }, `🏫 ${formatSchoolFullName(s)}`)
     ));
 
     const editBtn = createEl("button", {

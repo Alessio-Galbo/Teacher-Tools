@@ -2,12 +2,32 @@ import { t } from "../../i18n.js";
 import { peiDimensions } from "./peiData.js";
 import { assemblePeiText } from "./peiModel.js";
 
-export function buildFullDossierText(selections = {}, studentName = "", effectiveDims = {}) {
+const TYPE_MAP = {
+  secondaria_2: "pei_school_type_sec2",
+  secondaria_1: "pei_school_type_sec1",
+  primaria: "pei_school_type_prim",
+  infanzia: "pei_school_type_inf",
+  custom: "pei_school_type_custom",
+};
+
+export function buildFullDossierText(data = {}, legacyStudent = "", legacyDims = {}) {
+  const isObj = data && typeof data === "object" && !Array.isArray(data) && ("selections" in data || "schoolType" in data);
+  const selections = isObj ? (data.selections || {}) : data;
+  const studentName = isObj ? (data.studentName || "") : legacyStudent;
+  const effectiveDims = isObj ? (data.effectiveDims || {}) : legacyDims;
+  const schoolName = isObj ? (data.schoolName || "") : "";
+  const schoolType = isObj ? (data.schoolType || "secondaria_2") : "secondaria_2";
+  const activeYear = isObj ? (data.activeYear || "") : "";
+
+  const typeLabel = t(TYPE_MAP[schoolType] || "pei_school_type_sec2").toUpperCase();
   const header = [
-    "PIANO EDUCATIVO INDIVIDUALIZZATO (PEI) - SCUOLA SECONDARIA II GRADO",
-    "Linee Guida Ministeriali D.I. 182/2020 e D.I. 153/2023",
-    studentName ? `Studente: ${studentName}` : "",
-    `Data Documento: ${new Date().toLocaleDateString()}`,
+    t("pei_dossier_republic"),
+    `${t("pei_dossier_title")} - ${typeLabel}`,
+    t("pei_dossier_guidelines"),
+    schoolName ? `${t("pei_dossier_lbl_school")} ${schoolName}` : "",
+    activeYear ? `${t("pei_dossier_lbl_year")} ${activeYear}` : "",
+    studentName ? `${t("pei_dossier_lbl_student")} ${studentName}` : "",
+    `${t("pei_dossier_lbl_date")} ${new Date().toLocaleDateString()}`,
     "------------------------------------------------------------------\n",
   ].filter(Boolean).join("\n");
 

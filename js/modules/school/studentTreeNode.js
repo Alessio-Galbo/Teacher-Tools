@@ -72,6 +72,7 @@ export function createStudentTreeNode(st, onRefresh, nextYearStudents = [], next
     badges,
     actions: [pinBtn, editBtn, delBtn],
     isCollapsible: false,
+    level: 2,
     onTitleClick: () => {
       setActiveStudent(st.id);
       showToast(`${t("student_selector_label")} ${st.name}`, "info");

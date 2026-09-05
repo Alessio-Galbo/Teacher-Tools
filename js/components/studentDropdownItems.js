@@ -1,5 +1,6 @@
 import { createEl } from "../utils/dom.js";
 import { t } from "../i18n.js";
+import { formatSchoolFullName } from "../modules/school/schoolLocationHelper.js";
 
 export function buildDropdownItems(listEl, data, activeId, onSelect, onDone) {
   const { config, schools, classes, students, pinned, unassigned } = data;
@@ -25,7 +26,8 @@ export function buildDropdownItems(listEl, data, activeId, onSelect, onDone) {
   }
 
   schools.forEach((sch) => {
-    listEl.appendChild(makeItem(`school_${sch.id}`, `🏫 ${sch.name}${sch.city ? ` (${sch.city})` : ""}`, "level-school", sch.name));
+    const fullSchoolName = formatSchoolFullName(sch);
+    listEl.appendChild(makeItem(`school_${sch.id}`, `🏫 ${fullSchoolName}`, "level-school", `${sch.name} ${fullSchoolName}`));
     const schCls = classes.filter((c) => !c.schoolId || c.schoolId === sch.id);
     schCls.forEach((c) => {
       listEl.appendChild(makeItem(`class_${c.name}`, `🏢 Classe ${c.name}`, "level-class", `${sch.name} ${c.name}`));

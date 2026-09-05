@@ -5,6 +5,7 @@ import { getAll } from "../../services/db.js";
 import { getNotes } from "../notes/notesModel.js";
 import { showStudentModal } from "./studentModal.js";
 import { createStudentOverviewBody } from "./studentOverviewBody.js";
+import { formatSchoolFullName } from "./schoolLocationHelper.js";
 
 export async function showStudentOverviewModal(initialYear = null) {
   const overlay = document.getElementById("modal-container");
@@ -43,7 +44,7 @@ export async function showStudentOverviewModal(initialYear = null) {
 
     const studentClass = classes.find((c) => c.id === activeSt.classId || c.name === activeSt.className);
     const studentSchool = schools.find((s) => s.id === studentClass?.schoolId) || schools[0];
-    const schoolName = studentSchool ? `${studentSchool.name}${studentSchool.city ? ` (${studentSchool.city})` : ""}` : "";
+    const schoolName = studentSchool ? formatSchoolFullName(studentSchool) : "";
     const peers = yearStudents.filter((s) => s.className && s.className === activeSt.className && s.id !== activeSt.id);
     const notes = (await getNotes(null, activeSt.name)).filter((n) => !n.schoolYear || n.schoolYear === year);
 

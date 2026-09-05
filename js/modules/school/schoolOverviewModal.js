@@ -3,6 +3,7 @@ import { getSchoolConfig, getSchools, getClasses } from "../../services/schoolSe
 import { getStudents } from "../../services/studentService.js";
 import { getNotes } from "../notes/notesModel.js";
 import { createSchoolOverviewBody } from "./schoolOverviewBody.js";
+import { formatSchoolFullName } from "./schoolLocationHelper.js";
 
 export async function showSchoolOverviewModal(schoolId, initialYear = null) {
 
@@ -47,7 +48,7 @@ export async function showSchoolOverviewModal(schoolId, initialYear = null) {
     ) : null;
 
     const header = createEl("div", { className: "modal-header" }, [
-      createEl("h3", { className: "modal-title" }, `🏫 ${school.name}${school.city ? ` (${school.city})` : ""}`),
+      createEl("h3", { className: "modal-title" }, `🏫 ${formatSchoolFullName(school)}`),
       createEl("button", { className: "modal-close-btn", onClick: () => overlay.classList.remove("active") }, "✕"),
     ]);
 

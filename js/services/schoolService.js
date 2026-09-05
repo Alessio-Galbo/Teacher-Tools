@@ -28,6 +28,7 @@ export async function addSchool(name, city = "", year = null, extra = {}) {
     id: "sch_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
     name: name.trim(),
     city: city.trim(),
+    province: (extra.province || "").trim().toUpperCase(),
     schoolType: extra.schoolType || "secondaria_2",
     maxGrade: extra.maxGrade || 5,
     years: [year || config.activeYear],

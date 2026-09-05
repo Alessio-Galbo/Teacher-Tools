@@ -71,6 +71,7 @@ export function createClassTreeNode(cls, students, onRefresh, allClasses = [], n
     badges,
     actions: [promoteBtn, addStBtn, editClsBtn, delClsBtn],
     children: studentNodes,
+    level: 1,
     onTitleClick: () => showClassOverviewModal(cls.id),
   });
 

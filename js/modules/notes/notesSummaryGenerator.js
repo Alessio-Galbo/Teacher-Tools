@@ -1,3 +1,5 @@
+import { formatSchoolFullName } from "../school/schoolLocationHelper.js";
+
 function formatNoteLine(n, showTarget = true) {
   const dateStr = new Date(n.createdAt).toLocaleDateString();
   const targetStr = showTarget ? ` [${n.studentCode || "Generale"}${n.className ? ` • ${n.className}` : ""}]` : "";
@@ -15,7 +17,7 @@ export function generateStructuredSummary({ notes = [], activeId = "", schools =
   let scopeLabel = "Tutti gli Studenti";
   if (activeId && activeId.startsWith("school_")) {
     const s = schools.find((x) => `school_${x.id}` === activeId || x.id === activeId.replace("school_", ""));
-    scopeLabel = s ? `Scuola: ${s.name}${s.city ? ` (${s.city})` : ""}` : "Scuola";
+    scopeLabel = s ? `Scuola: ${formatSchoolFullName(s)}` : "Scuola";
   } else if (activeId && activeId.startsWith("class_")) {
     scopeLabel = `Classe ${activeId.replace("class_", "")}`;
   } else if (activeId && activeId !== "__ALL__") {

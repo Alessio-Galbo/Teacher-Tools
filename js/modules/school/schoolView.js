@@ -1,4 +1,5 @@
 import { createEl, clearEl } from "../../utils/dom.js";
+import { t } from "../../i18n.js";
 import { getSchools, getClasses, getSchoolConfig } from "../../services/schoolService.js";
 import { getStudents } from "../../services/studentService.js";
 import { showSchoolModal } from "./schoolModal.js";
@@ -7,25 +8,48 @@ import { createDebouncedRenderer } from "../../utils/renderHelper.js";
 import { getNextSchoolYear } from "./rolloverHelper.js";
 
 let refreshViewFn = null;
+let schoolViewMode = localStorage.getItem("teacher_tools_school_view_mode") || "grid";
 
 export function renderSchoolView(container) {
   clearEl(container);
 
   const addSchoolBtn = createEl("button", {
-    className: "btn btn-primary",
-    i18n: "school_btn_add_school",
+    className: "btn btn-primary btn-sm school-header-add-btn",
+    title: t("school_btn_add_school"),
     onClick: () => showSchoolModal({ onSaved: () => { if (refreshViewFn) refreshViewFn(); } }),
+  }, [
+    createEl("span", { className: "school-btn-mobile-icon" }, "+ 🏫"),
+    createEl("span", { className: "school-btn-desktop-text", i18n: "school_btn_add_school" }),
+  ]);
+
+  const schoolsContainer = createEl("div");
+  const updateSchoolViewClass = () => {
+    schoolsContainer.className = `schools-container ${schoolViewMode === "grid" ? "view-grid" : "view-rows"}`;
+  };
+  updateSchoolViewClass();
+
+  const viewModeBtn = createEl("button", {
+    className: "btn btn-secondary btn-sm btn-icon-only view-mode-toggle-btn",
+    title: t("school_view_toggle"),
+    onClick: () => {
+      schoolViewMode = schoolViewMode === "grid" ? "rows" : "grid";
+      localStorage.setItem("teacher_tools_school_view_mode", schoolViewMode);
+      updateSchoolViewClass();
+      updateViewModeBtn();
+    },
   });
+  function updateViewModeBtn() {
+    viewModeBtn.textContent = schoolViewMode === "grid" ? "☰" : "⊞";
+  }
+  updateViewModeBtn();
 
   const header = createEl("div", { className: "section-header-row" }, [
     createEl("div", { className: "section-header-info" }, [
       createEl("h2", { className: "section-title", i18n: "school_title" }),
       createEl("p", { className: "section-subtitle", i18n: "school_subtitle" }),
     ]),
-    addSchoolBtn,
+    createEl("div", { className: "section-header-actions" }, [viewModeBtn, addSchoolBtn]),
   ]);
-
-  const schoolsContainer = createEl("div", { className: "schools-container" });
 
   async function build() {
     const config = await getSchoolConfig();
@@ -37,8 +61,7 @@ export function renderSchoolView(container) {
 
     if (schools.length === 0) {
       const emptyBtn = createEl("button", {
-        className: "btn btn-primary",
-        i18n: "school_btn_add_school",
+        className: "btn btn-primary", i18n: "school_btn_add_school",
         onClick: () => showSchoolModal({ onSaved: () => { if (refreshViewFn) refreshViewFn(); } }),
       });
       return [createEl("div", { className: "card empty-card" }, [
@@ -53,10 +76,7 @@ export function renderSchoolView(container) {
   }
 
   refreshViewFn = createDebouncedRenderer(schoolsContainer, build);
-
-  container.appendChild(header);
-  container.appendChild(schoolsContainer);
-
+  container.append(header, schoolsContainer);
   refreshViewFn();
 }
 

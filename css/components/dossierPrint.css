@@ -1,0 +1,20 @@
+@media print {
+  @page { size: A4; margin: 15mm; }
+  body, html { background: #ffffff !important; color: #000000 !important; overflow: visible !important; height: auto !important; }
+  .app-shell, .tab-bar, .app-header, .toast-container, .modal-header, .modal-toolbar { display: none !important; }
+  .modal-overlay { position: static !important; background: transparent !important; padding: 0 !important; display: block !important; opacity: 1 !important; }
+  .modal-dialog { border: none !important; box-shadow: none !important; max-width: 100% !important; max-height: none !important; overflow: visible !important; background: transparent !important; }
+  .modal-body { padding: 0 !important; overflow: visible !important; }
+  .dossier-paper { color: #000000 !important; gap: 14px; }
+  .dossier-header-box { background: #f4f4f4 !important; border: 1px solid #333333 !important; color: #000000 !important; }
+  .dossier-republic-heading { color: #444444 !important; }
+  .dossier-official-title { color: #000000 !important; }
+  .dossier-official-sub { color: #555555 !important; }
+  .dossier-meta-grid { border-top-color: #cccccc !important; }
+  .dossier-meta-lbl { color: #555555 !important; }
+  .dossier-meta-val { color: #000000 !important; }
+  .dossier-dim-card { background: #ffffff !important; border: 1px solid #999999 !important; page-break-inside: avoid; }
+  .dossier-dim-title { color: #000000 !important; border-bottom: 1px solid #cccccc !important; }
+  .dossier-label { color: #444444 !important; }
+  .dossier-content { color: #000000 !important; }
+}

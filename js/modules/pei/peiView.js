@@ -15,7 +15,7 @@ const dimSelections = {};
 export function renderPeiView(container) {
   clearEl(container);
   const configBtn = createEl("button", {
-    className: "btn btn-secondary",
+    className: "btn btn-secondary pei-config-btn",
     i18n: "pei_btn_config",
     onClick: () => {
       import("./peiConfigModal.js").then((m) => m.showPeiConfigModal(() => updateForm()));
@@ -58,9 +58,9 @@ export function renderPeiView(container) {
 async function updateForm() {
   const container = document.getElementById("pei-form-container");
   if (!container) return;
+  const dim = await getEffectiveDimension(currentDimId);
+  currentEffectiveDim = dim;
   clearEl(container);
-  currentEffectiveDim = await getEffectiveDimension(currentDimId);
-  const dim = currentEffectiveDim;
   const sel = dimSelections[currentDimId] || { levelId: dim.levels[0].id, goalId: dim.goals[0].id, strategyId: dim.strategies[0].id };
   dimSelections[currentDimId] = sel;
 

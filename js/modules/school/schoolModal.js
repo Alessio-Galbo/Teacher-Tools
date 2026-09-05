@@ -2,8 +2,8 @@ import { createEl, clearEl } from "../../utils/dom.js";
 import { t } from "../../i18n.js";
 import { showToast } from "../../utils/toast.js";
 import { addSchool, updateSchool, associateSchoolToYear, getSchoolConfig, getHistoricSchools } from "../../services/schoolService.js";
-
-const TYPE_MAX = { secondaria_2: 5, secondaria_1: 3, primaria: 5, infanzia: 3 };
+import { formatSchoolFullName } from "./schoolLocationHelper.js";
+import { createSchoolTypeControls, TYPE_MAX } from "./schoolTypeSelector.js";
 
 export async function showSchoolModal(options = {}) {
   const { school = null, onSaved = null } = options;
@@ -16,25 +16,11 @@ export async function showSchoolModal(options = {}) {
   const historicSchools = !isEdit ? await getHistoricSchools(config.activeYear) : [];
   const nameInput = createEl("input", { className: "input-text", value: isEdit ? school.name : "", placeholder: "es. Liceo Galilei" });
   const cityInput = createEl("input", { className: "input-text", value: isEdit ? (school.city || "") : "", placeholder: "es. Bergamo" });
+  const provInput = createEl("input", { className: "input-text input-uppercase", value: isEdit ? (school.province || "") : "", placeholder: "es. BG", maxLength: "4" });
 
   const curType = school?.schoolType || "secondaria_2";
   const curMax = school?.maxGrade || TYPE_MAX[curType] || 5;
-
-  const maxGradeInput = createEl("input", { className: "input-text", type: "number", min: "1", max: "15", value: curMax, disabled: curType !== "custom" });
-  const typeSelect = createEl("select", {
-    className: "select-input",
-    onChange: () => {
-      const v = typeSelect.value;
-      if (TYPE_MAX[v]) { maxGradeInput.value = TYPE_MAX[v]; maxGradeInput.disabled = true; }
-      else { maxGradeInput.disabled = false; }
-    },
-  }, [
-    createEl("option", { value: "secondaria_2", selected: curType === "secondaria_2", i18n: "school_type_sec2" }),
-    createEl("option", { value: "secondaria_1", selected: curType === "secondaria_1", i18n: "school_type_sec1" }),
-    createEl("option", { value: "primaria", selected: curType === "primaria", i18n: "school_type_prim" }),
-    createEl("option", { value: "infanzia", selected: curType === "infanzia", i18n: "school_type_inf" }),
-    createEl("option", { value: "custom", selected: curType === "custom", i18n: "school_type_custom" }),
-  ]);
+  const { typeSelect, maxGradeInput } = createSchoolTypeControls(curType, curMax);
 
   const closeModal = () => { overlay.classList.remove("active"); clearEl(overlay); };
   const formElements = [];
@@ -42,7 +28,7 @@ export async function showSchoolModal(options = {}) {
   if (!isEdit && historicSchools.length > 0) {
     let histId = historicSchools[0].id;
     const histSelect = createEl("select", { className: "select-input", onChange: (e) => { histId = e.target.value; } },
-      historicSchools.map((s) => createEl("option", { value: s.id }, `🏫 ${s.name}${s.city ? ` (${s.city})` : ""}`)));
+      historicSchools.map((s) => createEl("option", { value: s.id }, `🏫 ${formatSchoolFullName(s)}`)));
     const assocBtn = createEl("button", { className: "btn btn-secondary", i18n: "school_btn_associate", onClick: async () => {
       await associateSchoolToYear(histId, config.activeYear);
       showToast(t("school_associated"), "success");
@@ -53,9 +39,13 @@ export async function showSchoolModal(options = {}) {
     formElements.push(createEl("div", { className: "modal-divider" }, [createEl("span", { className: "form-label", i18n: "school_new_institute_section" })]));
   }
 
+  const locRow = createEl("div", { className: "school-location-row" }, [
+    createEl("div", { className: "form-group form-flex-3" }, [createEl("label", { className: "form-label", i18n: "school_label_city" }), cityInput]),
+    createEl("div", { className: "form-group form-flex-1" }, [createEl("label", { className: "form-label", i18n: "school_label_province" }), provInput]),
+  ]);
   formElements.push(
     createEl("div", { className: "form-group" }, [createEl("label", { className: "form-label", i18n: "school_label_name" }), nameInput]),
-    createEl("div", { className: "form-group" }, [createEl("label", { className: "form-label", i18n: "school_label_city" }), cityInput]),
+    locRow,
     createEl("div", { className: "form-group" }, [createEl("label", { className: "form-label", i18n: "school_type_label" }), typeSelect]),
     createEl("div", { className: "form-group" }, [createEl("label", { className: "form-label", i18n: "school_max_grade_label" }), maxGradeInput])
   );
@@ -63,10 +53,12 @@ export async function showSchoolModal(options = {}) {
   const saveBtn = createEl("button", { className: "btn btn-primary", i18n: "btn_save", onClick: async () => {
     const name = nameInput.value.trim();
     if (!name) return;
+    const city = cityInput.value.trim();
+    const province = provInput.value.trim().toUpperCase();
     const schoolType = typeSelect.value;
     const maxGrade = parseInt(maxGradeInput.value, 10) || 5;
-    if (isEdit) await updateSchool({ ...school, name, city: cityInput.value.trim(), schoolType, maxGrade });
-    else await addSchool(name, cityInput.value.trim(), config.activeYear, { schoolType, maxGrade });
+    if (isEdit) await updateSchool({ ...school, name, city, province, schoolType, maxGrade });
+    else await addSchool(name, city, config.activeYear, { province, schoolType, maxGrade });
     showToast(t(isEdit ? "school_updated" : "school_created"), "success");
     closeModal();
     if (onSaved) onSaved();

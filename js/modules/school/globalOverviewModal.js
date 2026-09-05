@@ -1,6 +1,7 @@
 import { createEl, clearEl } from "../../utils/dom.js";
 import { getSchoolConfig, getSchools, getClasses } from "../../services/schoolService.js";
 import { getStudents } from "../../services/studentService.js";
+import { formatSchoolFullName } from "./schoolLocationHelper.js";
 
 export async function showGlobalOverviewModal(initialYear = null) {
   const overlay = document.getElementById("modal-container");
@@ -47,7 +48,7 @@ export async function showGlobalOverviewModal(initialYear = null) {
         overlay.classList.remove("active");
         import("./schoolOverviewModal.js").then((m) => m.showSchoolOverviewModal(s.id, year));
       },
-    }, `🏫 ${s.name}${s.city ? ` (${s.city})` : ""}`));
+    }, `🏫 ${formatSchoolFullName(s)}`));
 
     const header = createEl("div", { className: "modal-header" }, [
       createEl("h3", { className: "modal-title", i18n: "overview_global_title" }),
