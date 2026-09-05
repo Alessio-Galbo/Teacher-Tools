@@ -52,6 +52,10 @@ async function bootstrap() {
     if (btn && btn.dataset.target) switchTab(btn.dataset.target);
   });
 
+  const infoBtn = document.getElementById("header-info-btn");
+  if (infoBtn) {
+    infoBtn.addEventListener("click", () => import("./modules/info/infoModal.js").then((m) => m.showInfoModal()));
+  }
   const settingsBtn = document.getElementById("header-settings-btn");
   if (settingsBtn) {
     settingsBtn.addEventListener("click", () => showSettingsModal());

@@ -45,6 +45,15 @@
   white-space: normal;
 }
 
+.info-section-card, .info-support-card {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.info-meta-header {
+  margin-bottom: 14px;
+}
+
 @media (max-width: 640px) {
   .settings-backup-grid {
     grid-template-columns: 1fr;
