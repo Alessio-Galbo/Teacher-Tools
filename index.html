@@ -5,41 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="Teacher Tools - Suite didattica per docenti: PEI D.I. 182, Diario di Bordo, Semplificatore DSA, Verifiche. 100% offline & client-side.">
   <meta name="keywords" content="teacher tools, scuola, docenti, pei, dsa, verifiche, diario, pwa, didattica">
-  <meta name="author" content="Alessio Galbo"><meta name="robots" content="index, follow">
+  <meta name="author" content="Alessio Galbo"><meta name="robots" content="index, follow"><meta name="theme-color" content="#161b22">
   <meta property="og:type" content="website"><meta property="og:site_name" content="Teacher Tools"><meta property="og:locale" content="it_IT">
-  <meta property="og:url" content="https://alessio-galbo.github.io/Teacher-Tools/">
-  <meta property="og:title" content="Teacher Tools - Suite Didattica & Gestionale per Docenti">
+  <meta property="og:url" content="https://alessio-galbo.github.io/Teacher-Tools/"><meta property="og:title" content="Teacher Tools - Suite Didattica & Gestionale per Docenti">
   <meta property="og:description" content="Compilatore PEI D.I. 182, Semplificatore testi DSA, Generatore Verifiche. 100% Client-Side & Privato.">
-  <meta property="og:image" content="https://alessio-galbo.github.io/Teacher-Tools/assets/icon-192.png">
-  <meta property="og:image:secure_url" content="https://alessio-galbo.github.io/Teacher-Tools/assets/icon-192.png">
-  <meta property="og:image:type" content="image/png"><meta property="og:image:width" content="192"><meta property="og:image:height" content="192">
-  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="Teacher Tools - Suite Didattica & Gestionale per Docenti">
-  <meta name="twitter:description" content="Compilatore PEI, Semplificatore testi DSA, Generatore Verifiche. 100% Client-Side & Privato.">
-  <meta name="twitter:image" content="https://alessio-galbo.github.io/Teacher-Tools/assets/icon-192.png">
-  <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Teacher Tools"><meta name="theme-color" content="#161b22">
-  <link rel="icon" type="image/x-icon" href="favicon.ico"><link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://alessio-galbo.github.io/Teacher-Tools/assets/icon-192.png"><meta property="og:image:width" content="192"><meta property="og:image:height" content="192">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="Teacher Tools - Suite Didattica"><meta name="twitter:image" content="https://alessio-galbo.github.io/Teacher-Tools/assets/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Teacher Tools">
+  <link rel="icon" type="image/x-icon" href="favicon.ico"><link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png"><link rel="preload" as="image" href="assets/icon-192.png" type="image/png">
   <title data-i18n="app_title">Teacher Tools</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="css/variables.css"><link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components/nav.css">
-  <link rel="stylesheet" href="css/components/cards.css"><link rel="stylesheet" href="css/components/forms.css">
-  <link rel="stylesheet" href="css/components/modal.css"><link rel="stylesheet" href="css/components/toast.css">
-  <link rel="stylesheet" href="css/components/pei.css"><link rel="stylesheet" href="css/components/dossier.css">
-  <link rel="stylesheet" href="css/components/dossierPrint.css" media="print">
-  <link rel="stylesheet" href="css/components/notes.css"><link rel="stylesheet" href="css/components/studentBar.css">
-  <link rel="stylesheet" href="css/components/school.css"><link rel="stylesheet" href="css/components/tree.css">
-  <link rel="stylesheet" href="css/components/overview.css"><link rel="stylesheet" href="css/components/rollover.css">
-  <link rel="stylesheet" href="css/components/headerYear.css"><link rel="stylesheet" href="css/components/tools.css">
-  <link rel="stylesheet" href="css/components/quiz.css"><link rel="stylesheet" href="css/components/quizPrint.css">
-  <link rel="stylesheet" href="css/components/settings.css">
+  <link rel="stylesheet" href="css/variables.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components/nav.css">
+  <link rel="stylesheet" href="css/components/cards.css"><link rel="stylesheet" href="css/components/forms.css"><link rel="stylesheet" href="css/components/modal.css"><link rel="stylesheet" href="css/components/toast.css">
+  <link rel="stylesheet" href="css/components/pei.css"><link rel="stylesheet" href="css/components/dossier.css"><link rel="stylesheet" href="css/components/dossierPrint.css" media="print">
+  <link rel="stylesheet" href="css/components/notes.css"><link rel="stylesheet" href="css/components/studentBar.css"><link rel="stylesheet" href="css/components/school.css"><link rel="stylesheet" href="css/components/tree.css">
+  <link rel="stylesheet" href="css/components/overview.css"><link rel="stylesheet" href="css/components/rollover.css"><link rel="stylesheet" href="css/components/headerYear.css"><link rel="stylesheet" href="css/components/tools.css">
+  <link rel="stylesheet" href="css/components/quiz.css"><link rel="stylesheet" href="css/components/quizPrint.css"><link rel="stylesheet" href="css/components/settings.css"><link rel="stylesheet" href="css/components/splash.css"><link rel="stylesheet" href="css/components/lockScreen.css">
 </head>
 <body>
+  <div id="app-splash" class="splash-overlay">
+    <div class="splash-card">
+      <div class="splash-header">
+        <img src="assets/icon-192.png" alt="Teacher Tools" class="splash-logo-img" width="72" height="72">
+        <h2 class="splash-title">Teacher Tools</h2>
+        <p class="splash-subtitle" data-i18n="splash_subtitle">Suite Didattica & Gestionale</p>
+      </div>
+      <div class="splash-loader-area" id="splash-loader-area">
+        <div class="splash-progress-track"><div id="splash-progress-bar" class="splash-progress-bar"></div></div>
+        <p id="splash-status-text" class="splash-status-text" data-i18n="splash_loading">Caricamento in corso...</p>
+      </div>
+      <div id="splash-interactive-area" class="splash-interactive-area"></div>
+    </div>
+  </div>
   <div class="app-shell">
     <header class="app-header">
       <div class="app-title-group">
-        <h1 class="app-title" data-i18n="app_title"></h1>
-        <span class="app-subtitle" data-i18n="app_subtitle"></span>
+        <h1 class="app-title" data-i18n="app_title">Teacher Tools</h1>
+        <span class="app-subtitle" data-i18n="app_subtitle">Didattica & PEI</span>
       </div>
       <div class="header-right-actions">
         <div id="header-year-container" class="header-year-wrapper"></div>
@@ -78,10 +80,7 @@
     </nav>
   </div>
 
-  <div id="modal-container" class="modal-overlay"></div>
-  <div id="toast-container" class="toast-container"></div>
-
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script type="module" src="js/app.js"></script>
+  <div id="modal-container" class="modal-overlay"></div><div id="toast-container" class="toast-container"></div>
+  <script src="https://accounts.google.com/gsi/client" async defer></script><script type="module" src="js/app.js"></script>
 </body>
 </html>

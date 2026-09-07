@@ -1,19 +1,89 @@
 .settings-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 .settings-status-badge { white-space: nowrap; flex-shrink: 0; font-size: 0.78rem; padding: 3px 8px; border-radius: var(--radius-sm); }
 .settings-backup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-.settings-teacher-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.settings-teacher-card .btn-block { margin-top: 12px; }
+.device-teacher-section { border-top: 1px solid var(--color-border-subtle); padding-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.device-teacher-title { font-size: 0.74rem; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.device-teacher-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: stretch; }
+.device-teacher-grid .input-text, .device-teacher-grid .btn { height: 38px; min-height: 38px; box-sizing: border-box; } .device-teacher-grid .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; }
+.wizard-box { display: flex; flex-direction: column; gap: 8px; }
+.wizard-or-divider { display: flex; align-items: center; gap: 10px; margin: 6px 0; color: var(--color-text-secondary); font-size: 0.76rem; } .wizard-or-divider::before, .wizard-or-divider::after { content: ""; flex: 1; height: 1px; background: var(--color-border-subtle); }
+.wizard-tip-box { background: var(--color-surface-hover); border: 1px dashed var(--color-primary); border-radius: 8px; padding: 8px 10px; text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.teacher-setup-modal { max-width: 440px; width: 100%; }
+.teacher-setup-form { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.teacher-setup-form .input-text { height: 40px; font-size: 0.92rem; }
+.teacher-setup-form .btn { height: 42px; font-size: 0.95rem; font-weight: 600; justify-content: center; }
 .pwa-install-actions { margin-top: 12px; width: 100%; }
 .pwa-install-actions .btn { width: 100%; box-sizing: border-box; justify-content: center; text-align: center; white-space: normal; }
 .info-section-card, .info-support-card { margin-bottom: 12px; padding: 12px 14px; }
-.info-meta-header { margin-bottom: 14px; }
-.info-version-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.info-meta-header { margin-bottom: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.info-logo-img { width: 52px; height: 52px; border-radius: 12px; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
+.info-version-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 .info-changelog-pill-btn { padding: 3px 8px; font-size: 0.78rem; line-height: 1.4; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 4px; }
 .changelog-list { padding-left: 20px; margin: 10px 0 4px 0; font-size: 0.88rem; line-height: 1.5; color: var(--color-text-secondary); }
 .changelog-list li { margin-bottom: 6px; }
+.pairing-modal { max-width: 460px; width: 100%; }
+.pairing-modal .modal-body { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1.2rem; }
+.pairing-desc { font-size: 0.84rem; color: var(--color-text-secondary); line-height: 1.4; margin-bottom: 0.8rem; text-align: center; }
+.pairing-qr-wrap { display: flex; justify-content: center; align-items: center; margin: 0.4rem auto 0.8rem; width: 100%; }
+.pairing-phrase-box { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; margin: 0 auto 0.75rem; padding: 0.5rem 0.8rem; background: var(--color-surface-hover); border-radius: 8px; width: 100%; max-width: 340px; box-sizing: border-box; }
+.pairing-phrase-box small { font-size: 0.76rem; color: var(--color-text-secondary); }
+.pairing-manual-wrap { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; max-width: 340px; margin: 0 auto; box-sizing: border-box; } .pairing-manual-wrap .form-input { flex: 1; min-width: 0; font-size: 0.82rem; padding: 0.35rem 0.6rem; }
+.pairing-success-box { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; padding: 1.2rem 1rem; width: 100%; box-sizing: border-box; }
+.pairing-success-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 360px; margin: 16px auto 0; box-sizing: border-box; }
+.pairing-success-actions .btn { width: 100%; min-height: 42px; height: auto; display: inline-flex; align-items: center; justify-content: center; text-align: center; font-size: 0.92rem; padding: 10px 14px; box-sizing: border-box; white-space: normal; word-break: break-word; }
+.sync-waiting-banner { background: var(--color-surface-hover); border: 1px dashed var(--color-primary); border-radius: 8px; padding: 10px 12px; font-size: 0.84rem; color: var(--color-text-secondary); text-align: center; }
+.sync-result-icon { font-size: 2.2rem; }
+.sync-summary-card { background: var(--color-surface-hover); border: 1px solid var(--color-border); border-radius: 10px; padding: 12px 14px; width: 100%; max-width: 360px; margin: 0 auto 14px; box-sizing: border-box; }
+.sync-summary-card-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.sync-summary-pills-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.sync-summary-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: 20px; padding: 6px 12px; font-size: 0.88rem; font-weight: 500; color: var(--color-text-primary); }
+.sync-aligned-box { display: inline-flex; align-items: center; gap: 8px; background: var(--color-surface-hover); border: 1px solid var(--color-border); border-radius: 8px; padding: 10px 14px; font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 14px; }
+.sync-confirm-modal { max-width: 450px; width: 100%; }
+.sync-confirm-modal .modal-body { padding: 18px 20px 8px; text-align: center; }
+.sync-confirm-modal .sync-confirm-text { font-size: 0.95rem; line-height: 1.5; color: var(--color-text-primary); }
+.sync-confirm-footer { display: flex; justify-content: center; align-items: center; gap: 14px; width: 100%; padding: 12px 20px 20px; box-sizing: border-box; }
+.sync-confirm-footer .btn { flex: 1; max-width: 180px; min-width: 120px; display: inline-flex; align-items: center; justify-content: center; text-align: center; height: 38px; }
+.device-profile-box { padding: 14px 16px; background: var(--color-surface-hover); border: 1px solid var(--color-border); border-radius: var(--radius-md); margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
+.device-profile-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.device-profile-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.device-profile-icon { font-size: 1.4rem; }
+.device-profile-name { font-weight: 600; font-size: 1.05rem; color: var(--color-text-primary); white-space: nowrap; }
+.device-profile-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.device-mode-row { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--color-border-subtle); gap: 10px; }
+.device-mode-info { display: flex; align-items: center; gap: 8px; }
+.mode-text-desktop, .btn-text-mode { display: inline; }
+.mode-text-mobile { display: none; }
+.mesh-peer-list { display: flex; flex-direction: column; gap: 8px; margin: 8px 0 14px; }
+.mesh-peer-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); font-size: 0.9rem; gap: 10px; }
+.mesh-peer-info { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; flex-wrap: wrap; }
+.mesh-peer-title { font-weight: 600; white-space: normal; word-break: break-word; }
+.mesh-peer-info .badge { white-space: nowrap; flex-shrink: 0; }
+.mesh-peer-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.mesh-footer-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.mesh-footer-actions .btn { justify-content: center; text-align: center; height: 38px; display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; }
 
 @media (max-width: 640px) {
-  .settings-backup-grid { grid-template-columns: 1fr; }
-  .settings-teacher-grid { grid-template-columns: 1fr; }
-  .settings-card-header { align-items: flex-start; }
+  .sync-confirm-footer { flex-direction: column-reverse; gap: 10px; padding: 10px 16px 16px; }
+  .sync-confirm-footer .btn { width: 100%; max-width: 100%; height: 42px; font-size: 0.9rem; }
+  .device-profile-box { padding: 12px 14px; gap: 10px; }
+  .device-profile-header { flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; }
+  .device-profile-main { width: 100%; display: flex; align-items: center; gap: 8px; }
+  .device-profile-name { font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+  .device-profile-actions { width: 100%; display: flex; gap: 8px; }
+  .device-profile-actions .btn { flex: 1; justify-content: center; height: 32px; font-size: 0.78rem; padding: 4px 6px; }
+  .mode-text-desktop, .btn-text-mode { display: none; }
+  .mode-text-mobile { display: inline; }
+  .device-mode-row { flex-wrap: nowrap; gap: 6px; }
+  .device-mode-info { flex-wrap: nowrap; gap: 6px; min-width: 0; }
+  .device-mode-info .badge { font-size: 0.78rem; padding: 4px 8px; }
+  .device-mode-row .btn { padding: 4px 8px; height: 32px; font-size: 0.85rem; flex-shrink: 0; }
+  .device-teacher-grid { grid-template-columns: 1fr; gap: 8px; }
+  .device-teacher-grid .btn { width: 100%; height: 40px; }
+  .mesh-peer-item { padding: 8px 10px; gap: 6px; }
+  .mesh-peer-info { flex-wrap: nowrap; gap: 6px; overflow: hidden; flex: 1; min-width: 0; }
+  .mesh-peer-title { font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+  .mesh-peer-info .badge { font-size: 0.72rem; padding: 2px 6px; white-space: nowrap; }
+  .mesh-peer-actions .btn { padding: 4px 6px; font-size: 0.78rem; white-space: nowrap; }
+  .mesh-footer-actions { grid-template-columns: 1fr; gap: 8px; }
+  .mesh-footer-actions .btn { height: 42px; }
 }

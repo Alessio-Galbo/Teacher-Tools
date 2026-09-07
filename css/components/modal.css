@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   padding: 16px;
-  z-index: 1000;
+  z-index: 10005;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-fast);
@@ -68,11 +68,7 @@
   background-color: var(--color-surface);
 }
 
-.modal-divider {
-  margin: 14px 0 10px 0;
-  padding-top: 10px;
-  border-top: 1px dashed var(--color-border);
-}
+.modal-divider { margin: 14px 0 10px 0; padding-top: 10px; border-top: 1px dashed var(--color-border); }
 
 .modal-close-btn {
   width: 32px;

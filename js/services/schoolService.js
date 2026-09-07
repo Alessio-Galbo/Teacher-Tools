@@ -5,7 +5,7 @@ import { removeClassAndCleanup } from "./classCleanupService.js";
 
 export { getClasses, addClass, removeClass, rolloverClass } from "./classService.js";
 export { getSchoolConfig, updateSchoolConfig, addAcademicYear, removeAcademicYear } from "./schoolConfigService.js";
-export { getSchools, getHistoricSchools } from "./schoolStorage.js";
+export { getSchools, getHistoricSchools, getAllSchoolsRaw } from "./schoolStorage.js";
 
 let activeSchoolId = localStorage.getItem("teacher_tools_active_school") || "";
 

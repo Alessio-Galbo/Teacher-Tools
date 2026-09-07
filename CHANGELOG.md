@@ -5,6 +5,41 @@ Il formato segue le convenzioni di [Keep a Changelog](https://keepachangelog.com
 
 ---
 
+## [0.6.0] - 2026-09-07
+
+### Aggiunto
+- **Selezione Profilo Dispositivo & Loading Screen Nativo:**
+  - Schermata di caricamento iniziale a zero-glimpse integrata nel DOM con icona ufficiale ad alta risoluzione (`assets/icon-192.png`).
+  - Barra di caricamento progressivo a monitoraggio delle fasi di bootstrap (archivio locale, traduzioni, servizi, viste).
+  - Scelta modalità operativa all'avvio: *Dispositivo Personale* (con bypass "Ricorda su questo dispositivo") vs *Computer Condiviso (Modalità Ospite)*.
+- **Modalità Computer Condiviso (Ospite) & Onboarding Guidato:**
+  - Badge permanente rosso in testata `[ 🔴 Ospite ]` per prevenire dimenticanze su LIM o PC d'istituto.
+  - Schermata di onboarding d'aula con 3 scelte operative: *Sessione Vuota da Zero*, *Sincronizza da Smartphone* e *Ripristina Sessione Sospesa*.
+  - Distruzione integrale istantanea dei dati (`clearAllStores()`) all'uscita esplicita dell'app a garanzia della privacy.
+- **Blocco Schermo LIM & Gestione PIN di Emergenza:**
+  - Schermata di blocco standby interattiva per oscurare i dati sensibili degli alunni quando il docente si allontana dalla cattedra, con visualizzazione del docente in servizio.
+  - Tripla modalità di sblocco: inquadrando il QR dallo smartphone abbinato, toccando la notifica remota push sullo smartphone, oppure inserendo un PIN di emergenza a 4 cifre.
+  - Gestione granulare del PIN dalle Impostazioni o direttamente dalla schermata di blocco con interfaccia responsive ottimizzata (su desktop allineata a riga singola, su mobile snella con icone ✏️/🗑️).
+  - Modale PIN sagomata su misura (`modal-pin`) per un layout gradevole e minimale.
+- **Salvataggio & Ripristino Cifrato Sessioni Sospese (Zero-Knowledge):**
+  - Salvataggio condizionale automatico: se un collega preme "Termina Sessione Precedente" dalla schermata di blocco, la sessione viene cifrata con AES-GCM 256-bit usando il token dello smartphone abbinato e archiviata in forma protetta (`tt_suspended_guest_sessions`).
+  - Uscita volontaria pulita: se l'app è in funzione e il docente clicca su Termina Sessione, tutti i dati vengono polverizzati senza creare sessioni sospese.
+  - Riconoscimento crittografico passivo: inquadrando il QR dal telefono precedentemente associato, la postazione verifica l'hash del token e mostra un prompt privato per ripristinare il database o eliminare il salvataggio.
+  - Scadenza naturale e auto-pruning a 30 giorni (ideale per coprire festività scolastiche, ponti o brevi assenze) con tetto massimo di 5 sessioni recenti.
+- **Auto-Sync Cartella Locale / Cloud Desktop (Directory Sync):**
+  - Integrazione nativa con la File System Access API (`window.showDirectoryPicker()`) per il mirroring continuo su cartelle collegate (Google Drive per Desktop, OneDrive, chiavette USB).
+  - Supporto multi-cartella simultaneo e inibizione automatica totale in Modalità Ospite (gestore isolato in `TT_LocalSyncHandlesDB`).
+- **Accoppiamento Crittografico & Rete Personale (Device Mesh):**
+  - Generazione di token casuali a 256 bit crittografici (`crypto.getRandomValues`) e Codice QR generato via SVG nativo a zero dipendenze esterne.
+  - Scansione fotocamera da smartphone e alternativa manuale con passphrase mnemonica a 4 parole.
+  - Storico persistente dei codici di abbinamento su smartphone (`pairingHistory.js`) per riautenticazioni e sblocchi automatici.
+- **LocalSync WebRTC ad Alta Velocità & Chunking Dati:**
+  - Canale dati Peer-to-Peer diretto e crittografato su rete Wi-Fi o Hotspot tra PC e smartphone con badge di presenza interattivo in testata.
+  - Trasferimento dati frammentato a pacchetti (chunking) e compressione Deflate/Gzip via `CompressionStream` con fallback per grandi archivi didattici.
+  - Motore di fusione differenziale bilaterale degli store con creazione obbligatoria di `Pre-Sync Snapshot` prima di applicare modifiche.
+
+---
+
 ## [0.5.0] - 2026-09-05
 
 ### Aggiunto

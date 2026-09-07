@@ -2,7 +2,8 @@ import { createEl, clearEl } from "../../utils/dom.js";
 import { setLanguage, getLanguage } from "../../i18n.js";
 import { createBackupSection } from "./backupSection.js";
 import { createCloudCard } from "./cloudSection.js";
-import { createTeacherProfileCard } from "./teacherProfileCard.js";
+import { createDeviceMeshCard } from "./deviceMeshCard.js";
+import { createDirectorySyncCard } from "./directorySyncCard.js";
 import { createPwaInstallCard } from "./pwaInstallCard.js";
 
 export function renderSettingsView(container) {
@@ -12,8 +13,9 @@ export function renderSettingsView(container) {
   ]);
   const refresh = () => renderSettingsView(container);
   container.appendChild(header);
+  container.appendChild(createDeviceMeshCard(refresh));
+  container.appendChild(createDirectorySyncCard(refresh));
   container.appendChild(createPwaInstallCard(refresh));
-  container.appendChild(createTeacherProfileCard(refresh));
   container.appendChild(createCloudCard(refresh));
   container.appendChild(createBackupSection());
   container.appendChild(createThemeCard(refresh));

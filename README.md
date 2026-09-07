@@ -1,7 +1,7 @@
 # Teacher Tools 🎒
 > **Suite Didattica & Gestionale per Docenti** — PWA Offline-First, Privacy al 100%, Multi-Istituto & Multi-Anno.
 
-[![Pre-release](https://img.shields.io/badge/version-v0.5.0--beta-orange.svg)](CHANGELOG.md)
+[![Pre-release](https://img.shields.io/badge/version-v0.6.0--beta-orange.svg)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PWA Ready](https://img.shields.io/badge/PWA-installable-green.svg)](manifest.json)
 [![Zero Server](https://img.shields.io/badge/Privacy-100%25%20Client--Side-brightgreen.svg)](#-privacy--sicurezza-dei-dati)
@@ -42,12 +42,13 @@ Teacher Tools è un'applicazione web moderna concepita per insegnanti curricolar
 
 ---
 
-## 🔒 Privacy & Sicurezza dei Dati su 3 Livelli
-1. **Livello 1 (Offline Locale):** archiviazione istantanea su **IndexedDB** nel browser, funzionante al 100% offline.
-2. **Livello 2 (Cloud Sync Google Drive):** sincronizzazione privata tramite OAuth 2.0 (Google Identity Services) direttamente sulla cartella riservata `TeacherTools_Data` di Google Drive, senza intermediari.
-3. **Livello 3 (Backup & Migrazione):**
-   * **Salva con Nome:** selezione della cartella locale di salvataggio (o cartella iCloud Drive / Google Drive).
-   * **Scarica Backup Rapido & Ripristina:** esportazione e importazione in formato JSON per migrare i dati tra diversi dispositivi.
+## 🔒 Privacy, Sincronizzazione & Sicurezza dei Dati
+1. **Dispositivo Personale vs Modalità Ospite (LIM):** scelta all'avvio tra persistenza locale stabile o sessione temporanea effimera con blocco standby e cancellazione automatica dei dati alla chiusura.
+2. **Blocco Schermo LIM & Sblocco Multiplo:** schermata standby con oscuramento dati allievi, visualizzazione docente in cattedra e sblocco via smartphone (QR / notifica) o PIN numerico.
+3. **Sessioni Sospese Cifrate (Zero-Knowledge):** protezione automatica dei dati con cifratura AES-GCM 256-bit quando la sessione viene terminata da blocco schermo da un collega, ripristino privato da smartphone e scadenza naturale a 30 giorni.
+4. **LocalSync Peer-to-Peer (WebRTC):** sincronizzazione diretta e crittografata tra PC e smartphone sotto la stessa rete locale (Wi-Fi/Hotspot) tramite accoppiamento con QR Code a 256 bit, chunking dati ad alta velocità e Smart Merge differenziale.
+5. **Directory Sync (File System Access API):** mirroring automatico e continuo su cartelle locali collegate (Google Drive per Desktop, OneDrive, chiavette USB).
+6. **Cloud Sync Google Drive & Backup JSON:** backup opzionale diretto su cartella privata Google Drive e file JSON per migrazioni manuali.
 
 ---
 

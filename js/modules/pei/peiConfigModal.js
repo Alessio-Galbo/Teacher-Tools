@@ -34,6 +34,7 @@ export async function showPeiConfigModal(onSaved) {
         renderContent();
       },
       onDelete: async (id) => {
+        if (!window.confirm(t("pei_config_delete_confirm"))) return;
         await deleteCustomPhrase(id);
         showToast(t("pei_config_deleted"), "info");
         renderContent();

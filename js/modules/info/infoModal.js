@@ -18,6 +18,7 @@ export function showInfoModal() {
   const body = createEl("div", { className: "modal-body info-modal-body" });
 
   const appMeta = createEl("div", { className: "info-meta-header" });
+  appMeta.appendChild(createEl("img", { src: "assets/icon-192.png", alt: "Teacher Tools", className: "info-logo-img" }));
   const versionRow = createEl("div", { className: "info-version-row" });
   const versionLabel = `${t("info_version_prefix")} ${CURRENT_APP_VERSION} (${t("info_version_stage")})`;
   versionRow.appendChild(createEl("span", { className: "badge badge-primary" }, versionLabel));

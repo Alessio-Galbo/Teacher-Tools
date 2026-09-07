@@ -42,10 +42,8 @@ def find_available_port(start_port=8000, max_attempts=15):
 def print_qr(url):
     try:
         if sys.platform == "win32":
-            try:
-                sys.stdout.reconfigure(encoding="utf-8")
-            except Exception:
-                pass
+            try: sys.stdout.reconfigure(encoding="utf-8")
+            except Exception: pass
         import qrcode
         qr = qrcode.QRCode(border=1)
         qr.add_data(url)
@@ -53,8 +51,7 @@ def print_qr(url):
         print("  📷 Inquadra il QR con la fotocamera dello smartphone:\n")
         qr.print_ascii(invert=True)
         print()
-    except Exception:
-        pass
+    except Exception: pass
 
 def main():
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

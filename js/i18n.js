@@ -5,8 +5,14 @@ export function getLanguage() {
   return currentLang;
 }
 
-export function t(key) {
-  return dictionary[key] || key;
+export function t(key, params = null) {
+  let val = dictionary[key] || key;
+  if (params && typeof params === "object") {
+    Object.keys(params).forEach((k) => {
+      val = val.replaceAll(`{${k}}`, params[k]);
+    });
+  }
+  return val;
 }
 
 export function translateDOM(root = document) {

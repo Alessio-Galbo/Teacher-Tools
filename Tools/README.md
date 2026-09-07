@@ -17,19 +17,40 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
 ---
 
 ## 2. `server.py` & `Avvia_Teacher_Tools.bat`
-* **Scopo:** Avvio rapido dell'applicazione in locale sia per uso su PC che per accesso diretto da smartphone connesso via Wi-Fi o Hotspot.
+* **Scopo:** Avvio rapido dell'applicazione in locale per sviluppo e test, sia per uso su PC che per accesso diretto da smartphone connesso via Wi-Fi o Hotspot.
 * **Cosa fa:**
-  1. Rileva una porta libera disponibile (a partire dalla 8000) e si aggancia a tutte le interfacce di rete (`0.0.0.0`).
+  1. Rileva una porta libera disponibile (a partire dalla 8000) e serve i file statici (`0.0.0.0`).
   2. Rileva l'indirizzo IP LAN / Hotspot del computer e stampa il link diretto per smartphone (`http://<ip>:<porta>`).
-  3. Genera e mostra direttamente nel terminale un **Codice QR scansionabile** con la fotocamera del telefono per l'accesso istantaneo senza digitare l'IP.
+  3. Genera e mostra direttamente nel terminale un **Codice QR scansionabile** con la fotocamera del telefono per l'accesso istantaneo all'app senza digitare l'IP.
   4. Apre automaticamente la finestra del browser del PC su `http://localhost:<porta>`.
-  5. Mantiene attivo il server web locale fino alla chiusura della finestra.
 * **Come utilizzarlo:**
   - Fare doppio clic sul file `Avvia_Teacher_Tools.bat` presente nella root del progetto.
 
 ---
 
-## 3. `RELEASE_WORKFLOW.md`
+---
+
+## 3. `test_qr_validity.py`
+* **Scopo:** Test automatizzato di conformità matematica del generatore QR Code locale.
+* **Cosa controlla:** Confronta modulo per modulo (1369 moduli) la matrice generata da `qrMatrix.js` con la ground truth ufficiale ISO/IEC 18004.
+* **Come eseguirlo:**
+  ```powershell
+  python Tools/test_qr_validity.py
+  ```
+
+---
+
+## 4. `test_crypto_compat.py`
+* **Scopo:** Test automatizzato di conformità crittografica del motore SHA-256 e cifrario a flusso in puro JavaScript.
+* **Cosa controlla:** Verifica bit-for-bit che `sha256.js` produca hash identici a Python `hashlib.sha256` su casi limite e stringhe UTF-8.
+* **Come eseguirlo:**
+  ```powershell
+  python Tools/test_crypto_compat.py
+  ```
+
+---
+
+## 5. `RELEASE_WORKFLOW.md`
 * **Scopo:** Guida procedurale e architettura per il rilascio di nuove versioni e la gestione del changelog in-app.
 * **Cosa descrive:**
   1. **Fonte Unica della Versione:** Come aggiornare `CURRENT_APP_VERSION` e `CHANGELOG_HISTORY` in `js/modules/info/changelogData.js`.
@@ -37,3 +58,4 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
   3. **Aggiornamento Cache PWA:** Incremento del numero di versione cache in `sw.js`.
   4. **Procedura di Rilascio Git & GitHub:** I comandi standard per tagging e pubblicazione note di rilascio.
 * **Consulta la guida completa:** [RELEASE_WORKFLOW.md](RELEASE_WORKFLOW.md).
+

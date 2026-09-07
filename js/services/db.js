@@ -74,3 +74,7 @@ export async function clearStore(storeName) {
     req.onerror = () => reject(req.error);
   });
 }
+
+export async function clearAllStores() {
+  await Promise.all(STORES.map((s) => clearStore(s)));
+}

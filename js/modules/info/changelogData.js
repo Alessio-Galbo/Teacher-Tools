@@ -1,6 +1,21 @@
-export const CURRENT_APP_VERSION = "0.5.0";
+export const CURRENT_APP_VERSION = "0.6.0";
 
 export const CHANGELOG_HISTORY = [
+  {
+    version: "0.6.0",
+    date: "2026-09-07",
+    titleKey: "changelog_v060_title",
+    items: [
+      "changelog_v060_item1",
+      "changelog_v060_item2",
+      "changelog_v060_item3",
+      "changelog_v060_item4",
+      "changelog_v060_item5",
+      "changelog_v060_item6",
+      "changelog_v060_item7",
+      "changelog_v060_item8",
+    ],
+  },
   {
     version: "0.5.0",
     date: "2026-09-05",
