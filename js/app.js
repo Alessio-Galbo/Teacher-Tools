@@ -4,7 +4,7 @@ import { getSchoolConfig } from "./services/schoolConfigService.js";
 import { initHeaderYearSelector } from "./components/headerYearSelector.js";
 import { initStudentBar } from "./components/studentBar.js";
 import { showSettingsModal } from "./modules/settings/settingsModal.js";
-import { initPwaInstall } from "./services/pwaInstallService.js";
+import { initPwaInstall, registerServiceWorker } from "./services/pwaInstallService.js";
 import { checkDeviceProfileOnStartup } from "./modules/auth/deviceProfile.js";
 import { initGuestModeUI } from "./modules/auth/guestMode.js";
 import { setSplashProgress } from "./modules/auth/splashModal.js";
@@ -79,9 +79,7 @@ async function bootstrap() {
     initGuestModeUI();
   });
 
-  if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    navigator.serviceWorker.register("./sw.js").then((reg) => reg.update()).catch(() => {});
-  }
+  registerServiceWorker();
 }
 
 document.addEventListener("DOMContentLoaded", bootstrap);

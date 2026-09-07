@@ -1,4 +1,4 @@
-const CACHE_NAME = "teachertools-v107";
+const CACHE_NAME = "teachertools-v108";
 const CSS = ["variables", "base", "layout", "components/nav", "components/cards", "components/forms", "components/modal", "components/toast", "components/pei", "components/dossier", "components/dossierPrint", "components/notes", "components/studentBar", "components/school", "components/tree", "components/overview", "components/rollover", "components/headerYear", "components/tools", "components/quiz", "components/quizPrint", "components/settings", "components/splash", "components/lockScreen"].map((c) => `./css/${c}.css`);
 
 const JS = [
