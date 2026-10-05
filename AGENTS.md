@@ -1,54 +1,37 @@
-# Istruzioni Operative per Agenti AI (Teacher Tools)
+# Teacher Tools — istruzioni per agenti AI
 
-Questo documento guida gli agenti AI e i collaboratori per mantenere coerenza e conformità architetturale.
+Valgono le regole globali di AI-hub (file ≤ 100 righe, testi in `locales/`, niente codice inline). In più, per questo progetto:
+1. **Git:** mai `git commit` / `git push` in autonomia; proponi e attendi conferma.
+2. **Strumenti:** script in `Tools/`; aggiorna sempre [Tools/README.md](Tools/README.md).
+3. **Versione e rilascio:** unica fonte `js/modules/info/changelogData.js`; procedura in 4 passi (versione, traduzioni, `CACHE_NAME` in `sw.js`, `python Tools/verify_rules.py`) in [Tools/RELEASE_WORKFLOW.md](Tools/RELEASE_WORKFLOW.md).
+4. **Architettura** (versione e changelog, profili dispositivo, sincronizzazione): [docs/architettura.md](docs/architettura.md).
 
----
-
-## 1. Regole Architetturali Fondamentali
-1. **Regola dei 100 limiti (Stop a 90 righe):** Nessun file (`.js`, `.css`, `.html`, `.py`, `.json`) deve mai superare le 100 righe. Se un file supera le 90 righe, rifattorizzare immediatamente.
-2. **Zero Hardcoding (i18n):** Nessun testo visibile all'utente va inserito direttamente nel codice. Usare sempre `locales/it.json` e `locales/en.json`.
-3. **Zero Inline Code:** Nessun CSS o JS inline. Utilizzare fogli di stile o moduli dedicati.
-4. **Permission First su Git:** MAI eseguire `git commit` o `git push` in autonomia. Chiedere sempre esplicita conferma all'utente.
-5. **Registro `/Tools`:** Mantenere sempre aggiornato `Tools/README.md` quando si aggiungono o modificano script/utility.
-
----
-
-## 2. Sistema di Versione & Changelog
-La versione dell'applicazione e le note di rilascio seguono il principio della **Singola Fonte di Verità**:
-
-* **Fonte Dati & Costante Versione:** [`js/modules/info/changelogData.js`](js/modules/info/changelogData.js)
-  * `CURRENT_APP_VERSION`: stringa con la versione attuale (es. `"0.6.0"`).
-  * `CHANGELOG_HISTORY`: array con le release storiche (`version`, `date`, `titleKey`, `items`).
-* **Interfaccia Badge & Modale:**
-  * Il badge versione nella modale Info (`ℹ️`) legge direttamente `CURRENT_APP_VERSION`.
-  * Accanto al badge c'è il pulsante `[ 📜 Changelog ]` gestito da [`js/modules/info/changelogModal.js`](js/modules/info/changelogModal.js).
-* **Notifica Automatica al Lancio:**
-  * [`js/modules/info/updateNotifier.js`](js/modules/info/updateNotifier.js) confronta all'avvio `CURRENT_APP_VERSION` con `localStorage` (`teacher_tools_last_seen_version`).
-  * Se la versione è cambiata, mostra automaticamente la modale con le novità.
-
----
-
-## 3. Come Rilasciare una Nuova Versione (Workflow in 4 Step)
-Per rilasciare un aggiornamento (es. `v0.X.Y`):
-1. **`js/modules/info/changelogData.js`:**
-   * Aggiorna `CURRENT_APP_VERSION = "0.X.Y"`.
-   * Aggiungi in testa a `CHANGELOG_HISTORY` la nuova voce con le relative chiavi i18n (`changelog_v0XY_title`, `items: [...]`).
-2. **`locales/it.json` e `locales/en.json`:** Aggiungi le traduzioni delle chiavi create.
-3. **`sw.js`:** Incrementa `CACHE_NAME` (es. `teachertools-v44` -> `teachertools-v45`).
-4. **Verifica & Proposta:**
-   * Esegui `python Tools/verify_rules.py`.
-   * Proponi il piano e attendi la conferma dell'utente prima di eseguire commit e tag git.
-
-Per i dettagli completi, consultare [`Tools/RELEASE_WORKFLOW.md`](Tools/RELEASE_WORKFLOW.md).
-
----
-
-## 4. Architettura Profili Dispositivo & Sincronizzazione
-* **Profili (`js/modules/auth/`):**
-  * `deviceProfile.js`: Gestisce `PERSONAL` (persistente) vs `GUEST` (effimero).
-  * `guestMode.js` & `lockScreen.js`: Badge rosso in header, lock screen e distruzione dati (`clearAllStores()`) all'uscita esplicita.
-* **Sincronizzazione (`js/modules/sync/`):**
-  * `directorySync.js`: File System Access API multi-cartella, isolato in `TT_LocalSyncHandlesDB` (inibito in modalità ospite).
-  * `deviceMesh.js` & `cryptoUtils.js`: Cerchia dispositivi con token 256-bit e QR code SVG autonomo (`qrGf.js`, `qrMatrix.js`, `qrSvg.js`).
-  * `localSyncPeer.js` & `smartMerge.js`: Canale WebRTC P2P e fusione differenziale con snapshot preventivo obbligatorio.
-
+<!-- hub:map:start -->
+## Mappe
+| Area | Mappa | Contenuto |
+|---|---|---|
+| `Tools/` | [Tools](docs/maps/Tools.md) | Registro Strumenti e Utility (`/Tools`) |
+| `css/` | [css](docs/maps/css.md) | 24 file in components/ |
+| `js/components/` | [js-components](docs/maps/js-components.md) | 4 file, es. headerYearSelector.js, studentBar.js, studentDropdownItems.js |
+| `js/modules/auth/` | [js-modules-auth](docs/maps/js-modules-auth.md) | 12 file, es. deviceProfile.js, firstRunWizard.js, guestBarUI.js |
+| `js/modules/info/` | [js-modules-info](docs/maps/js-modules-info.md) | 4 file, es. changelogData.js, changelogModal.js, infoModal.js |
+| `js/modules/notes/` | [js-modules-notes](docs/maps/js-modules-notes.md) | 18 file, es. noteForm.js, noteItem.js, noteModal.js |
+| `js/modules/pei/` | [js-modules-pei](docs/maps/js-modules-pei.md) | 15 file, es. dossierModal.js, dossierRenderer.js, dossierText.js |
+| `js/modules/school/` | [js-modules-school](docs/maps/js-modules-school.md) | 29 file, es. classEditModal.js, classListCard.js, classOverviewBody.js |
+| `js/modules/settings/` | [js-modules-settings](docs/maps/js-modules-settings.md) | 15 file, es. backupSection.js, cloudSection.js, deviceMeshCard.js |
+| `js/modules/sync/` | [js-modules-sync](docs/maps/js-modules-sync.md) | 29 file, es. cryptoUtils.js, deviceInfo.js, deviceMesh.js |
+| `js/modules/tools/` | [js-modules-tools](docs/maps/js-modules-tools.md) | 40 file in dsa/, grades/, planner/, quiz/ |
+| `js/services/` | [js-services](docs/maps/js-services.md) | 13 file, es. backup.js, classCleanupService.js, classRolloverService.js |
+| `js/utils/` | [js-utils](docs/maps/js-utils.md) | 3 file, es. dom.js, renderHelper.js, toast.js |
+| `misc` | [misc](docs/maps/misc.md) | file nella root e cartelle piccole: docs/, js/, locales/ |
+## Avvio e test
+- servizio `python Tools/server.py`: porta 8105 · `python Tools/server.py --port 8105`
+- test: `python -m unittest` (dalla root)
+## Regole
+- globali: `~/.claude/CLAUDE.md` e `~/.gemini/GEMINI.md` (generate da AI-hub)
+## Skill attive
+- per tag: app-icon-generation, headless-chrome-cdp, pwa-service-worker-checklist, service-troubleshooting
+## Non qui
+- `.agents/`, `.claude/`, `.github/`: config dei tool AI
+- `__pycache__/`: dipendenze/generati
+<!-- hub:map:end -->

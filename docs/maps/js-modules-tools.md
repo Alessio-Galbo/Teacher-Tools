@@ -1,0 +1,44 @@
+<!-- hub:map:start -->
+# Mappa: js/modules/tools/
+Torna al [router](../../AGENTS.md) · 40 file
+- [dsa/dsaControls.js](../../js/modules/tools/dsa/dsaControls.js): Crea i selettori di font, dimensione, spaziatura e contrasto per la lettura DSA
+- [dsa/dsaFormatter.js](../../js/modules/tools/dsa/dsaFormatter.js): Divide il testo in frasi ed evidenzia i connettivi, generando HTML accessibile
+- [dsa/dsaPrintModal.js](../../js/modules/tools/dsa/dsaPrintModal.js): Modale di anteprima, copia e stampa della scheda di lettura DSA con intestazione
+- [dsa/dsaView.js](../../js/modules/tools/dsa/dsaView.js): Vista dello strumento DSA: editor testo, controlli, anteprima e pulsanti azione
+- [grades/gradeCalculator.js](../../js/modules/tools/grades/gradeCalculator.js): Interpreta i voti (+, -, ½, /) e calcola medie semplici e ponderate
+- [grades/gradeModal.js](../../js/modules/tools/grades/gradeModal.js): Modale per creare o modificare una verifica con elenco alunni e salvataggio
+- [grades/gradeModalFields.js](../../js/modules/tools/grades/gradeModalFields.js): Costruisce i campi del modulo verifica: titolo, materia, data, peso, classe, tipo
+- [grades/gradeModalRoster.js](../../js/modules/tools/grades/gradeModalRoster.js): Tabella alunni con voto e note nella modale verifica, ed estrazione dei dati
+- [grades/gradesCardRenderer.js](../../js/modules/tools/grades/gradesCardRenderer.js): Disegna la scheda di una verifica con classe, tipo, peso, media e azioni
+- [grades/gradesModel.js](../../js/modules/tools/grades/gradesModel.js): Accesso dati delle valutazioni: lettura per anno, salvataggio con default, rimozione
+- [grades/gradesView.js](../../js/modules/tools/grades/gradesView.js): Vista elenco valutazioni con filtro per classe, nuovo, modifica ed eliminazione
+- [planner/calendarCardRenderer.js](../../js/modules/tools/planner/calendarCardRenderer.js): Disegna la card di un evento del calendario con tipo, orario e azioni docente
+- [planner/calendarEventModal.js](../../js/modules/tools/planner/calendarEventModal.js): Finestra modale per creare o modificare un evento del calendario (campi e salvataggio)
+- [planner/calendarModel.js](../../js/modules/tools/planner/calendarModel.js): Accesso dati degli eventi del calendario: lettura per anno, salvataggio, rimozione
+- [planner/calendarView.js](../../js/modules/tools/planner/calendarView.js): Vista calendario con modalità docente/studente, filtro classe ed elenco eventi
+- [planner/planModal.js](../../js/modules/tools/planner/planModal.js): Modale per creare o modificare una programmazione didattica e salvarla
+- [planner/planModalFields.js](../../js/modules/tools/planner/planModalFields.js): Costruisce i campi del form programmazione: titolo, materia, periodo, classi, obiettivi
+- [planner/planModel.js](../../js/modules/tools/planner/planModel.js): Accesso dati delle programmazioni didattiche: lettura, salvataggio, rimozione
+- [planner/plannerView.js](../../js/modules/tools/planner/plannerView.js): Vista Pianificatore con sotto-schede Programmazioni e Calendario
+- [planner/plansListView.js](../../js/modules/tools/planner/plansListView.js): Elenco delle programmazioni didattiche con card, modifica, eliminazione e nuovo piano
+- [quiz/quizBuilder.js](../../js/modules/tools/quiz/quizBuilder.js): Crea domande di verifica per tipo ed esporta la prova in testo stampabile
+- [quiz/quizCardRenderer.js](../../js/modules/tools/quiz/quizCardRenderer.js): Editor della card di una domanda: punti, spostamento, eliminazione, testo e cloze
+- [quiz/quizHeaderCard.js](../../js/modules/tools/quiz/quizHeaderCard.js): Card intestazione verifica: titolo, materia, argomento, nuovo, salvati, salvataggio
+- [quiz/quizMaxScoreBox.js](../../js/modules/tools/quiz/quizMaxScoreBox.js): Box del punteggio massimo con calcolo automatico dai punti e modale dei pesi
+- [quiz/quizModel.js](../../js/modules/tools/quiz/quizModel.js): Accesso dati dei quiz su IndexedDB: elenco per anno, lettura, salvataggio con default, eliminazione
+- [quiz/quizOptionsRenderer.js](../../js/modules/tools/quiz/quizOptionsRenderer.js): Disegna i campi di input delle opzioni A-D per le domande a risposta multipla
+- [quiz/quizPointsModal.js](../../js/modules/tools/quiz/quizPointsModal.js): Modale per impostare i punteggi predefiniti per tipo di domanda e applicarli a tutte
+- [quiz/quizPrintFieldsSelector.js](../../js/modules/tools/quiz/quizPrintFieldsSelector.js): Checkbox per scegliere quali campi dell'intestazione appaiono nella stampa del quiz
+- [quiz/quizPrintHeaderRenderer.js](../../js/modules/tools/quiz/quizPrintHeaderRenderer.js): Costruisce l'intestazione del foglio stampato: scuola, docente, studente, classe, voto
+- [quiz/quizPrintModal.js](../../js/modules/tools/quiz/quizPrintModal.js): Modale di anteprima stampa quiz con copia testo, stampa, opzioni e caricamento dati scuola
+- [quiz/quizPrintOptionsBar.js](../../js/modules/tools/quiz/quizPrintOptionsBar.js): Barra opzioni di stampa (ambito, stile, layout) con preferenze salvate in localStorage
+- [quiz/quizPrintSheetRenderer.js](../../js/modules/tools/quiz/quizPrintSheetRenderer.js): Genera il foglio di stampa: domande per tipo (scelta, V/F, cloze, aperta) e righe risposta
+- [quiz/quizQuestionsList.js](../../js/modules/tools/quiz/quizQuestionsList.js): Mostra l'elenco delle domande della variante attiva con elimina e sposta su/giù
+- [quiz/quizRandomizer.js](../../js/modules/tools/quiz/quizRandomizer.js): Mescola domande e opzioni e crea nuove varianti del quiz con ID rigenerati
+- [quiz/quizSavedModal.js](../../js/modules/tools/quiz/quizSavedModal.js): Modale dei quiz salvati: lista per anno, carica ed elimina con conferma
+- [quiz/quizToolbar.js](../../js/modules/tools/quiz/quizToolbar.js): Barra con pulsanti per aggiungere domande, copiare il testo e aprire la stampa
+- [quiz/quizVariantMinimalBar.js](../../js/modules/tools/quiz/quizVariantMinimalBar.js): Barra ridotta con pulsanti crea variante parallela e rimescola, con una sola variante
+- [quiz/quizVariantsBar.js](../../js/modules/tools/quiz/quizVariantsBar.js): Barra a schede delle varianti A-F con aggiunta, rimescolamento ed eliminazione variante
+- [quiz/quizView.js](../../js/modules/tools/quiz/quizView.js): Vista principale del quiz: stato iniziale e composizione di intestazione, varianti, toolbar e lista
+- [toolsView.js](../../js/modules/tools/toolsView.js): Vista Strumenti: intestazione, menu a tendina e sotto-schede DSA, quiz, voti, planner
+<!-- hub:map:end -->

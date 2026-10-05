@@ -5,6 +5,7 @@ Server HTTP locale con rilevamento IP e codice QR per smartphone.
 """
 
 import os
+import argparse
 import sys
 import socket
 import mimetypes
@@ -19,15 +20,12 @@ class QuietHandler(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         super().end_headers()
 
+# IP LAN + QR: strumento condiviso AI-hub (tools/lan_qr.py), cartella da AI_HUB_PATH
+sys.path.append(os.path.join(os.environ.get("AI_HUB_PATH") or r"D:\Git Repositories\AI-hub", "tools"))
+from lan_qr import lan_ip, qr_text  # noqa: E402
+
 def get_lan_ip():
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-        s.close()
-        return ip
-    except Exception:
-        return "127.0.0.1"
+    return lan_ip()
 
 def find_available_port(start_port=8000, max_attempts=15):
     for port in range(start_port, start_port + max_attempts):
@@ -39,25 +37,30 @@ def find_available_port(start_port=8000, max_attempts=15):
                 continue
     return start_port
 
+def requested_port():
+    """Porta scelta: --port N, poi variabile PORT (assegnata dall'AI-hub), poi 8000."""
+    parser = argparse.ArgumentParser(description="Teacher Tools - server locale")
+    parser.add_argument("--port", type=int, default=8000)
+    args, _ = parser.parse_known_args()
+    env = os.environ.get("PORT", "")
+    if env.isdigit() and not any(a.startswith("--port") for a in sys.argv[1:]):
+        return int(env)
+    return args.port
+
 def print_qr(url):
     try:
-        if sys.platform == "win32":
-            try: sys.stdout.reconfigure(encoding="utf-8")
-            except Exception: pass
-        import qrcode
-        qr = qrcode.QRCode(border=1)
-        qr.add_data(url)
-        qr.make(fit=True)
+        qr = qr_text(url)
         print("  📷 Inquadra il QR con la fotocamera dello smartphone:\n")
-        qr.print_ascii(invert=True)
-        print()
+        print(qr)
     except Exception: pass
 
 def main():
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root_dir)
 
-    port = find_available_port(8000)
+    try: sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # stdout rediretto (log AI-hub) in cp1252
+    except Exception: pass
+    port = find_available_port(requested_port())
     lan_ip = get_lan_ip()
     local_url = f"http://localhost:{port}"
     mobile_url = f"http://{lan_ip}:{port}"
