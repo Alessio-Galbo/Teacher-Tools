@@ -2,9 +2,9 @@
 # Mappa: misc
 Torna al [router](../../AGENTS.md) · 13 file
 - [Avvia_Teacher_Tools.bat](../../Avvia_Teacher_Tools.bat): Launcher Windows: cerca python o py e avvia il server Tools\server.py
-- [CHANGELOG.md](../../CHANGELOG.md): Registro delle Modifiche (Changelog)
-- [README.md](../../README.md): Teacher Tools 🎒
-- [docs/architettura.md](../../docs/architettura.md): Architettura (note per agenti AI)
+- [CHANGELOG.md](../../CHANGELOG.md): Registro delle Modifiche: [0.6.0] - 2026-09-07, [0.5.0] - 2026-09-05, [0.4.0] - 2026-09-04, [0.3.0]…
+- [README.md](../../README.md): Teacher Tools 🎒: 🌟 Moduli & Funzionalità Principali, 🔒 Privacy, Sincronizzazione & Sicurezza dei Da…
+- [docs/architettura.md](../../docs/architettura.md): Sistema di Versione & Changelog, Architettura Profili Dispositivo & Sincronizzazione
 - [index.html](../../index.html): Pagina principale PWA: meta/SEO, caricamento CSS, splash, header, barra studente, viste
 - [js/app.js](../../js/app.js): Avvio dell'app: tema, caricamento lazy delle viste, cambio tab, bootstrap con splash
 - [js/i18n.js](../../js/i18n.js): Gestione traduzioni: carica locales/<lingua>.json, funzione t(), traduzione DOM e cambio lingua

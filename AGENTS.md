@@ -10,7 +10,7 @@ Valgono le regole globali di AI-hub (file ≤ 100 righe, testi in `locales/`, ni
 ## Mappe
 | Area | Mappa | Contenuto |
 |---|---|---|
-| `Tools/` | [Tools](docs/maps/Tools.md) | Registro Strumenti e Utility (`/Tools`) |
+| `Tools/` | [Tools](docs/maps/Tools.md) | Registro Strumenti e Utility: 1. verify_rules.py, 2. server.py & Avvia_Teacher_Tools.bat,  |
 | `css/` | [css](docs/maps/css.md) | 24 file in components/ |
 | `js/components/` | [js-components](docs/maps/js-components.md) | 4 file, es. headerYearSelector.js, studentBar.js, studentDropdownItems.js |
 | `js/modules/auth/` | [js-modules-auth](docs/maps/js-modules-auth.md) | 12 file, es. deviceProfile.js, firstRunWizard.js, guestBarUI.js |
@@ -30,7 +30,7 @@ Valgono le regole globali di AI-hub (file ≤ 100 righe, testi in `locales/`, ni
 ## Regole
 - globali: `~/.claude/CLAUDE.md` e `~/.gemini/GEMINI.md` (generate da AI-hub)
 ## Skill attive
-- per tag: app-icon-generation, headless-chrome-cdp, modern-web-guidance, pwa-service-worker-checklist, service-troubleshooting, web-share-social-preview
+- per tag: app-icon-generation, headless-chrome-cdp, modern-web-guidance, portable-app-design, public-repo-hygiene, pwa-service-worker-checklist, service-troubleshooting, web-share-social-preview
 ## Non qui
 - `.agents/`, `.claude/`, `.github/`: config dei tool AI
 - `__pycache__/`: dipendenze/generati
