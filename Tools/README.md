@@ -28,9 +28,15 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
 
 ---
 
+## 3. `lan_link.py`
+* **Scopo:** Rilevamento IP di LAN e visualizzazione QR Code per `server.py`, con ripiego se AI-hub non è presente.
+* **Cosa fa:**
+  1. Utilizza `lan_qr` da AI-hub se disponibile.
+  2. In assenza di AI-hub, rileva l'IP locale via socket UDP verso internet senza generare errori e informa l'utente con fallback pulito.
+
 ---
 
-## 3. `test_qr_validity.py`
+## 4. `test_qr_validity.py`
 * **Scopo:** Test automatizzato di conformità matematica del generatore QR Code locale.
 * **Cosa controlla:** Confronta modulo per modulo (1369 moduli) la matrice generata da `qrMatrix.js` con la ground truth ufficiale ISO/IEC 18004.
 * **Come eseguirlo:**
@@ -40,7 +46,7 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
 
 ---
 
-## 4. `test_crypto_compat.py`
+## 5. `test_crypto_compat.py`
 * **Scopo:** Test automatizzato di conformità crittografica del motore SHA-256 e cifrario a flusso in puro JavaScript.
 * **Cosa controlla:** Verifica bit-for-bit che `sha256.js` produca hash identici a Python `hashlib.sha256` su casi limite e stringhe UTF-8.
 * **Come eseguirlo:**
@@ -50,7 +56,7 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
 
 ---
 
-## 5. `RELEASE_WORKFLOW.md`
+## 6. `RELEASE_WORKFLOW.md`
 * **Scopo:** Guida procedurale e architettura per il rilascio di nuove versioni e la gestione del changelog in-app.
 * **Cosa descrive:**
   1. **Fonte Unica della Versione:** Come aggiornare `CURRENT_APP_VERSION` e `CHANGELOG_HISTORY` in `js/modules/info/changelogData.js`.

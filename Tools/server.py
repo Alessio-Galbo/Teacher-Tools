@@ -20,12 +20,8 @@ class QuietHandler(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         super().end_headers()
 
-# IP LAN + QR: strumento condiviso AI-hub (tools/lan_qr.py), cartella da AI_HUB_PATH
-sys.path.append(os.path.join(os.environ.get("AI_HUB_PATH") or r"D:\Git Repositories\AI-hub", "tools"))
-from lan_qr import lan_ip, qr_text  # noqa: E402
-
-def get_lan_ip():
-    return lan_ip()
+# IP LAN + QR: Tools/lan_link.py (strumento AI-hub lan_qr, con ripiego se AI-hub manca)
+from lan_link import get_lan_ip, print_qr  # noqa: E402
 
 def find_available_port(start_port=8000, max_attempts=15):
     for port in range(start_port, start_port + max_attempts):
@@ -46,13 +42,6 @@ def requested_port():
     if env.isdigit() and not any(a.startswith("--port") for a in sys.argv[1:]):
         return int(env)
     return args.port
-
-def print_qr(url):
-    try:
-        qr = qr_text(url)
-        print("  📷 Inquadra il QR con la fotocamera dello smartphone:\n")
-        print(qr)
-    except Exception: pass
 
 def main():
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
