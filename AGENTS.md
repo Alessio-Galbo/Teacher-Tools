@@ -21,7 +21,7 @@ Valgono le regole globali di AI-hub (file ≤ 100 righe, testi in `locales/`, ni
 | `js/modules/settings/` | [js-modules-settings](docs/maps/js-modules-settings.md) | 15 file, es. backupSection.js, cloudSection.js, deviceMeshCard.js |
 | `js/modules/sync/` | [js-modules-sync](docs/maps/js-modules-sync.md) | 29 file, es. cryptoUtils.js, deviceInfo.js, deviceMesh.js |
 | `js/modules/tools/` | [js-modules-tools](docs/maps/js-modules-tools.md) | 40 file in dsa/, grades/, planner/, quiz/ |
-| `js/services/` | [js-services](docs/maps/js-services.md) | 13 file, es. backup.js, classCleanupService.js, classRolloverService.js |
+| `js/services/` | [js-services](docs/maps/js-services.md) | 14 file, es. backup.js, classCleanupService.js, classRolloverService.js |
 | `js/utils/` | [js-utils](docs/maps/js-utils.md) | 3 file, es. dom.js, renderHelper.js, toast.js |
 | `misc` | [misc](docs/maps/misc.md) | file nella root e cartelle piccole: docs/, js/, locales/ |
 ## Avvio e test

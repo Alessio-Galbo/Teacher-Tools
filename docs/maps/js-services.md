@@ -1,6 +1,6 @@
 <!-- hub:map:start -->
 # Mappa: js/services/
-Torna al [router](../../AGENTS.md) · 13 file
+Torna al [router](../../AGENTS.md) · 14 file
 - [backup.js](../../js/services/backup.js): Esporta/importa tutto il database in JSON, condivisione file (iCloud/share) e dump
 - [classCleanupService.js](../../js/services/classCleanupService.js): Elimina una classe e ripulisce riferimenti di promozione, origine e studenti collegati
 - [classRolloverService.js](../../js/services/classRolloverService.js): Passaggio d'anno: crea classe di destinazione, promuove o trattiene studenti, fine ciclo
@@ -14,4 +14,5 @@ Torna al [router](../../AGENTS.md) · 13 file
 - [schoolStorage.js](../../js/services/schoolStorage.js): Accesso allo store scuole: lettura grezza, filtro per anno, salvataggio ed eliminazione
 - [snapshot.js](../../js/services/snapshot.js): Snapshot automatici dei dati: creazione, elenco e ripristino con backup pre-rollback
 - [studentService.js](../../js/services/studentService.js): CRUD studenti: elenco ordinato, aggiunta, pin, modifica, rimozione e studente attivo
+- [swUpdateIndicator.js](../../js/services/swUpdateIndicator.js): Indicatore discreto «Aggiornamento pronto» nell'intestazione: la nuova versione si applica solo al…
 <!-- hub:map:end -->
