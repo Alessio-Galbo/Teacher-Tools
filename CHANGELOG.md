@@ -5,6 +5,18 @@ Il formato segue le convenzioni di [Keep a Changelog](https://keepachangelog.com
 
 ---
 
+## Non ancora rilasciato
+
+### Modificato
+- **PWA: aggiornamento al tocco invece del ricaricamento automatico (2026-10-12):**
+  - `sw.js` (cache `teachertools-v109`): niente `skipWaiting` all'installazione, messaggio `SKIP_WAITING`; precache con `cache: "reload"`; lettura solo dalla propria cache; navigazione offline → `index.html`, altri errori → 503 con `x-teachertools-fallback: 1` (prima 408 finto).
+  - Nuovo `js/services/swUpdateIndicator.js`: icona discreta «Aggiornamento pronto» nell'intestazione; ricarica solo dopo il tocco (anche se l'aggiornamento arriva da un'altra finestra). `pwaInstallService.js` non ricarica più da solo e chiede `navigator.storage.persist()`.
+  - `js/app.js`: il service worker si registra prima della scelta del profilo dispositivo (al primo avvio l'app non restava senza copia offline).
+
+### Corretto
+- Precache: percorso errato `js/modules/summaryModal.js` → `js/modules/notes/summaryModal.js` (faceva fallire l'installazione del service worker) e aggiunto `js/modules/settings/pwaInstallModal.js`.
+- Prove: `python -m unittest discover -s Tools -p "test_sw*.py"` (4 test OK); scenario Chrome headless: precache 216/216, avvio offline a server spento, indicatore senza ricarica, tocco → nuova versione e una sola cache.
+
 ## [0.6.0] - 2026-09-07
 
 ### Aggiunto

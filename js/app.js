@@ -55,6 +55,7 @@ async function bootstrap() {
   setSplashProgress(85, t("splash_step_views"));
   await switchTab("view-pei");
   setSplashProgress(100, t("splash_step_ready"));
+  registerServiceWorker();
   await checkDeviceProfileOnStartup();
   initGuestModeUI();
   import("./modules/auth/guestOnboarding.js").then((m) => m.checkAppOnboarding());
@@ -79,7 +80,6 @@ async function bootstrap() {
     initGuestModeUI();
   });
 
-  registerServiceWorker();
 }
 
 document.addEventListener("DOMContentLoaded", bootstrap);

@@ -1,5 +1,6 @@
 import { showToast } from "../utils/toast.js";
 import { showPwaInstallModal } from "../modules/settings/pwaInstallModal.js";
+import { initSwUpdateIndicator } from "./swUpdateIndicator.js";
 
 let deferredPrompt = null;
 
@@ -42,14 +43,9 @@ export async function promptPwaInstall() {
 
 export function registerServiceWorker() {
   if (!("serviceWorker" in navigator) || location.protocol === "file:") return;
-  let refreshing = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (!refreshing) {
-      refreshing = true;
-      window.location.reload();
-    }
-  });
   navigator.serviceWorker.register("./sw.js").then((reg) => {
-    reg.update();
+    initSwUpdateIndicator(reg);
+    reg.update().catch(() => {});
   }).catch(() => {});
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 }

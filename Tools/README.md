@@ -65,3 +65,14 @@ Questo documento funge da registro per tutti gli script e strumenti di supporto 
   4. **Procedura di Rilascio Git & GitHub:** I comandi standard per tagging e pubblicazione note di rilascio.
 * **Consulta la guida completa:** [RELEASE_WORKFLOW.md](RELEASE_WORKFLOW.md).
 
+---
+
+## 7. `test_sw_precache.py`
+* **Scopo:** Test `unittest` della PWA offline: ogni file dell'app (`js/`, `css/`, `assets/`, `locales/`) deve stare nella lista di precache di `sw.js`, e la lista non deve citare file inesistenti (l'installazione fallirebbe).
+* **Cosa controlla anche:** l'aggiornamento non forza `skipWaiting` all'installazione (si applica solo al tocco su «Aggiornamento pronto») e `node --check sw.js`.
+* **Eccezioni:** i 4 moduli non importati da nessuno sono elencati in `UNUSED` nel test.
+* **Come eseguirlo:**
+  ```powershell
+  python -m unittest discover -s Tools -p "test_sw*.py"
+  ```
+
