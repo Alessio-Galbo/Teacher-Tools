@@ -6,6 +6,7 @@ Il formato segue le convenzioni di [Keep a Changelog](https://keepachangelog.com
 ---
 
 ## Non ancora rilasciato
+- PWA offline 100%: avviso discreto «Aggiornamento pronto» invece di ricaricare la pagina; i 4 moduli non usati restano (l'utente non ha scelto di eliminarli) — fatto il 2026-10-12, prova: unittest Tools/test_sw_precache.py 4 OK; Chrome headless: precache 216/216, avvio offline a server spento, indicatore senza ricarica, tocco -> v110 e una sola cache, 0 errori console
 
 ### Modificato
 - **PWA: aggiornamento al tocco invece del ricaricamento automatico (2026-10-12):**
